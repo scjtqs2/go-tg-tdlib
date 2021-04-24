@@ -14,17 +14,17 @@ RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /g
 WORKDIR /go-tdlib
 RUN go mod tidy \
     && go build -o go-tg \
-    && cp go-tg /go-tg \
-    && rm -rf /go-tdlib
+    && cp go-tg /go-tg
+#    && rm -rf /go-tdlib
 
 # 设置时区为上海
 RUN apk update \
     && apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
-    && apk del tzdata git gcc g++ make \
+    && apk del tzdata git  \
     && rm -rf /var/cache/apk/*
-    
+
 ##ENTRYPOINT ["/go-tdlib/go-tg"]
 ##CMD ["/go-tdlib/go-tg"]
 #
