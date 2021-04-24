@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/Arman92/go-tdlib"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
-
-	"github.com/Arman92/go-tdlib"
 )
 
 func main() {
@@ -49,23 +47,55 @@ func main() {
 		os.Exit(1)
 	}()
 
-	// Wait while we get AuthorizationReady!
-	// Note: See authorization example for complete auhtorization sequence example
-	currentState, _ := client.Authorize()
-	for ; currentState.GetAuthorizationStateEnum() != tdlib.AuthorizationStateReadyType; currentState, _ = client.Authorize() {
-		time.Sleep(300 * time.Millisecond)
+	//// Wait while we get AuthorizationReady!
+	//// Note: See authorization example for complete auhtorization sequence example
+	//currentState, _ := client.Authorize()
+	//for ; currentState.GetAuthorizationStateEnum() != tdlib.AuthorizationStateReadyType; currentState, _ = client.Authorize() {
+	//	time.Sleep(300 * time.Millisecond)
+	//}
+	//
+	//// Send "/start" text every 5 seconds to Forsquare bot chat
+	//go func() {
+	//	// Should get chatID somehow, check out "getChats" example
+	//	chatID := int64(198529620) // Foursquare bot chat id
+	//
+	//	inputMsgTxt := tdlib.NewInputMessageText(tdlib.NewFormattedText("/start", nil), true, true)
+	//	client.SendMessage(chatID, 0, 0, nil, nil, inputMsgTxt)
+	//
+	//	time.Sleep(5 * time.Second)
+	//}()
+
+	for {
+		currentState, _ := client.Authorize()
+		if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPhoneNumberType {
+			fmt.Print("Enter phone: ")
+			var number string
+			fmt.Scanln(&number)
+			_, err := client.SendPhoneNumber(number)
+			if err != nil {
+				fmt.Printf("Error sending phone number: %v", err)
+			}
+		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
+			fmt.Print("Enter code: ")
+			var code string
+			fmt.Scanln(&code)
+			_, err := client.SendAuthCode(code)
+			if err != nil {
+				fmt.Printf("Error sending auth code : %v", err)
+			}
+		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPasswordType {
+			fmt.Print("Enter Password: ")
+			var password string
+			fmt.Scanln(&password)
+			_, err := client.SendAuthPassword(password)
+			if err != nil {
+				fmt.Printf("Error sending auth password: %v", err)
+			}
+		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {
+			fmt.Println("Authorization Ready! Let's rock")
+			break
+		}
 	}
-
-	// Send "/start" text every 5 seconds to Forsquare bot chat
-	go func() {
-		// Should get chatID somehow, check out "getChats" example
-		chatID := int64(198529620) // Foursquare bot chat id
-
-		inputMsgTxt := tdlib.NewInputMessageText(tdlib.NewFormattedText("/start", nil), true, true)
-		client.SendMessage(chatID, 0, 0, nil, nil, inputMsgTxt)
-
-		time.Sleep(5 * time.Second)
-	}()
 
 	// rawUpdates gets all updates comming from tdlib
 	rawUpdates := client.GetRawUpdatesChannel(100)

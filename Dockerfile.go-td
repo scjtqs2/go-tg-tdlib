@@ -1,5 +1,5 @@
 # golang编译环境
-FROM golang:1.16-alpine3.13
+FROM golang:1.16-alpine3.13 as gobuilder
 
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
@@ -15,4 +15,5 @@ WORKDIR /go-tdlib
 RUN go mod tidy \
     && go build -o go-tg
 
-ENTRYPOINT ["/go-tdlib/go-tg"]
+#ENTRYPOINT ["/go-tdlib/go-tg"]
+CMD ["/go-tdlib/go-tg"]
