@@ -11,9 +11,48 @@ COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
 RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev zlib-dev && rm -rf /var/cache/apk/*
 
 COPY . /go-tdlib
+
 WORKDIR /go-tdlib
 RUN go mod tidy \
     && go build -o go-tg
 
-#ENTRYPOINT ["/go-tdlib/go-tg"]
-CMD ["/go-tdlib/go-tg"]
+##ENTRYPOINT ["/go-tdlib/go-tg"]
+##CMD ["/go-tdlib/go-tg"]
+#
+#FROM alpine:3.13
+#
+#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
+#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
+#COPY --from=gobuilder /go-tdlib/go-tg  /go-tg
+#RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+#
+#RUN apk update && apk add --no-cache libc-dev openssl-dev zlib-dev && rm -rf /var/cache/apk/*
+
+ENV IS_DOCKER="true"
+ENV Phone=""
+ENV Password=""
+ENV AppID="187786"
+ENV AppHash="e782045df67ba48e441ccb105da8fc85"
+ENV UseMessageDatabase="true"
+ENV UseFileDatabase="true"
+ENV UseChatInfoDatabase="true"
+ENV UseTestDataCenter="false"
+ENV DatabaseDirectory="./tdlib-db"
+ENV FileDirectory="./tdlib-files"
+ENV IgnoreFileNames="false"
+ENV ProxyStatus="false"
+ENV ProxyType="Socks5"
+ENV ProxyAddr="127.0.0.1"
+ENV ProxyPort="1234"
+ENV ProxyUser=""
+ENV ProxyPasswd=""
+
+WORKDIR /home
+
+COPY run.sh /run.sh
+
+RUN chmod +x /run.sh
+
+CMD ["/run.sh"]
+
+
