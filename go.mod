@@ -1,4 +1,4 @@
-module github.com/scjtqs/go-tg-tdlib
+module github.com/scjtqs/go-tg
 
 go 1.16
 

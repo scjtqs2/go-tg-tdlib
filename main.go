@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/Arman92/go-tdlib"
-	"github.com/scjtqs/go-tg-tdlib/app"
-	"github.com/scjtqs/go-tg-tdlib/config"
+	"github.com/scjtqs/go-tg/app"
+	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"

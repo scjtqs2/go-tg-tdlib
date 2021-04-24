@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/robfig/cron/v3"
-	"github.com/scjtqs/go-tg-tdlib/config"
+	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"

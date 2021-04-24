@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/Arman92/go-tdlib"
 	"github.com/robfig/cron/v3"
-	"github.com/scjtqs/go-tg-tdlib/config"
+	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
