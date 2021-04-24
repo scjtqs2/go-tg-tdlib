@@ -20,7 +20,7 @@ type JsonConfig struct {
 	DatabaseDirectory   string `json:"database_directory"`
 	FileDirectory       string `json:"file_directory"`
 	IgnoreFileNames     bool   `json:"ignore_file_name"`
-	Proxy               Proxy  `json:"proxy"`
+	Proxy               *Proxy  `json:"proxy"`
 }
 
 type Proxy struct {
@@ -68,7 +68,7 @@ func DefaultConfig() *JsonConfig {
 		DatabaseDirectory:   "./tdlib-db",
 		FileDirectory:       "./tdlib-files",
 		IgnoreFileNames:     false,
-		Proxy: Proxy{
+		Proxy: &Proxy{
 			ProxyStatus: true,
 			ProxyType:   "Socks5",
 			ProxyAddr:   "127.0.0.1",
@@ -162,7 +162,7 @@ func DefaultConfig() *JsonConfig {
 }
 
 type CronJobConfig struct {
-	Cron []CronMessage `json:"cron_config"`
+	Cron []*CronMessage `json:"cron_config"`
 }
 
 type CronMessage struct {
@@ -195,15 +195,15 @@ func (c CronJobConfig) Save(p string) error {
 }
 func InitDefaultCronJobConf()  {
 	conf:=&CronJobConfig{
-		[]CronMessage{
+		[]*CronMessage{
 			{
 				Cron: "* * * * *",
-				ToUserName: "https://t.me/LvanLamCommitCodeBot",
+				ToUserName: "@LvanLamCommitCodeBot",
 				TextMsg: "/start",
 			},
 			{
 				Cron: "* * * * *",
-				ToUserName: "https://t.me/TuringLabbot",
+				ToUserName: "@TuringLabbot",
 				TextMsg: "/start",
 			},
 		},

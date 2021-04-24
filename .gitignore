@@ -5,3 +5,4 @@ go-tg
 tdlib-db
 tdlib-files
 dockerrun.sh
+logs
