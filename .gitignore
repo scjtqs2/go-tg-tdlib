@@ -1,0 +1,7 @@
+.idea
+go-tg
+*.json
+*.txt
+tdlib-db
+tdlib-files
+dockerrun.sh
