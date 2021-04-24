@@ -24,5 +24,13 @@ RUN cd / \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release .. \
-    && cmake --build . -- -j5 \
+    && cmake --build . -- -j$(($(nproc) + 1)) \
     && make install
+
+FROM alpine:3.13
+
+COPY --from=builder /usr/local/include/td /usr/local/include/td
+COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
+
+RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev zlib-dev && rm -rf /var/cache/apk/*
+

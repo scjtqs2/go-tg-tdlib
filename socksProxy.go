@@ -33,11 +33,12 @@ func main() {
 
 	// You can set user-name and password to empty of don't need it
 	// Socks5
-	client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeSocks5("user-name", "password"))
+	//client.AddProxy("pi.scjtqs.com", 1234, true, tdlib.NewProxyTypeSocks5("user-name", "password"))
+	client.AddProxy("pi.scjtqs.com", 10808, true, tdlib.NewProxyTypeSocks5("", ""))
 	// HTTP - HTTPS proxy
-	client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeHttp("user-name", "password", false))
+	//client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeHttp("user-name", "password", false))
 	// MtProto Proxy
-	client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeMtproto("MTPROTO-SECRET"))
+	//client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeMtproto("MTPROTO-SECRET"))
 
 	// Handle Ctrl+C
 	ch := make(chan os.Signal, 2)
