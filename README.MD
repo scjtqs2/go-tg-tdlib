@@ -1,7 +1,7 @@
-#使用说明
+# 使用说明
 > 此项目主要用于tg机器人 定时发送消息给某人，例如jd羊毛机器人
 > 
-##首次使用需要进行登录
+## 首次使用需要进行登录
 > 需要使用docker run进行登录处理
 ```shell
 docker run -it --rm --name tg_cli \
@@ -18,7 +18,7 @@ scjtqs/go-tg:latest
 > 
 >  ProxyPasswd 如果是MtProto 这里填secret \
 
-##定时任务配置
+## 定时任务配置
 > 首次运行后，当前目录会生成一个cron.json目录
 > 
 ```json
