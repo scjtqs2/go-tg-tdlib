@@ -10,14 +10,6 @@ COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
 
 RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev zlib-dev ca-certificates tzdata
 RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /go-tdlib
-# 设置时区为上海
-RUN apk update \
-    && apk add --no-cache tzdata \
-    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \
-    && apk del tzdata git gcc g++ make \
-    && rm -rf /var/cache/apk/*
-
 
 WORKDIR /go-tdlib
 RUN go mod tidy \
@@ -25,6 +17,14 @@ RUN go mod tidy \
     && cp go-tg /go-tg \
     && rm -rf /go-tdlib
 
+# 设置时区为上海
+RUN apk update \
+    && apk add --no-cache tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata git gcc g++ make \
+    && rm -rf /var/cache/apk/*
+    
 ##ENTRYPOINT ["/go-tdlib/go-tg"]
 ##CMD ["/go-tdlib/go-tg"]
 #
