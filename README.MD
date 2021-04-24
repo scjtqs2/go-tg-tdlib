@@ -12,7 +12,7 @@ docker run -it --rm --name tg_cli \
 -e ProxyPort="7890" \
 -e ProxyUser="" \
 -e ProxyPasswd="" \
-scjtqs/tg:test
+scjtqs/go-tg:latest
 ```
 >  ProxyType 支持`Socks5`、`HTTP`、`HTTPS`、`MtProto`
 > 
