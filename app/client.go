@@ -112,11 +112,11 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 func (a *AppClient) SendMessageByName(name string, message string) error {
 	chat, err := a.Cli.SearchPublicChat(name)
 	if err != nil {
-		log.Errorf("faild to check username %s,err:=%v", name, err)
+		log.Errorf("faild to check username %s,err:=%v \n\n", name, err)
 		return err
 	}
 	chatID := chat.ID
 	inputMsgTxt := tdlib.NewInputMessageText(tdlib.NewFormattedText(message, nil), true, true)
-	a.Cli.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsgTxt)
-	return nil
+	_,err=a.Cli.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsgTxt)
+	return err
 }

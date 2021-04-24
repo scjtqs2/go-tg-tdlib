@@ -29,6 +29,7 @@ RUN go mod tidy \
 #RUN apk update && apk add --no-cache libc-dev openssl-dev zlib-dev && rm -rf /var/cache/apk/*
 
 ENV IS_DOCKER="true"
+ENV DEBUG="false"
 ENV Phone=""
 ENV Password=""
 ENV AppID="187786"
