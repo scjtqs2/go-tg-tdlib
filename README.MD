@@ -14,9 +14,10 @@ docker run -it --rm --name tg_cli \
 -e ProxyPasswd="" \
 scjtqs/go-tg:latest
 ```
->  ProxyType 支持`Socks5`、`HTTP`、`HTTPS`、`MtProto`
+> ProxyType 支持`Socks5`、`HTTP`、`HTTPS`、`MtProto`
 > 
->  ProxyPasswd 如果是MtProto 这里填secret \
+> ProxyPasswd 如果是MtProto 这里填secret \
+> 国内阿里云镜像 registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:latest
 
 ## 定时任务配置
 > 首次运行后，当前目录会生成一个cron.json目录
