@@ -6,18 +6,29 @@
 ```shell
 docker run -it --rm --name tg_cli \
 -v `pwd`:/home \
+-e AppID="1807909" \
+-e AppHash="4b1594bcfab16b370686b14d85c60559" \
 -e ProxyStatus="true" \
 -e ProxyType="Socks5" \
--e ProxyAddr="127.0.0.1" \
+-e ProxyAddr="192.168.0.111" \
 -e ProxyPort="7890" \
 -e ProxyUser="" \
 -e ProxyPasswd="" \
 scjtqs/go-tg:latest
 ```
+> AppID 可不填
+> 
+> AppHash 可不填
+> 
 > ProxyType 支持`Socks5`、`HTTP`、`HTTPS`、`MtProto`
 > 
-> ProxyPasswd 如果是MtProto 这里填secret \
+> ProxyPasswd 如果是MtProto 这里填secret 
+> 
+> ProxyAddr 这个别填 localhost和 127.0.0.1。否则会识别成docker容器内部，而非宿主机
+> 
 > 国内阿里云镜像 registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:latest
+> 
+> 
 
 ## 定时任务配置
 > 首次运行后，当前目录会生成一个cron.json目录
@@ -45,3 +56,16 @@ scjtqs/go-tg:latest
 > text_msg 是要发送的消息类容
 > 
 > 请自行修改
+
+## docker后台运行
+```shell
+docker run  -D --restart=always --name tg_bot \
+-v /yourdir:/home \
+-e ProxyStatus="true" \
+-e ProxyType="Socks5" \
+-e ProxyAddr="192.168.0.111" \
+-e ProxyPort="7890" \
+-e ProxyUser="" \
+-e ProxyPasswd="" \
+scjtqs/go-tg:latest
+```
