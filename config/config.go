@@ -39,12 +39,12 @@ type WebHook struct {
 	WebHookStatus bool          `json:"status"`        //开关
 	WebHookUrl    string        `json:"http_post_url"` //post推送地址
 	WebHookSecret string        `json:"secret"`        //推送签名校验用的secret
-	WebHookFilter WebHookFilter `json:"filter"`		//过滤仅这些用户推送
+	WebHookFilter WebHookFilter `json:"filter"`        //过滤仅这些用户推送
 }
 
 type WebHookFilter struct {
-	FilterStatus bool `json:"status"` //开关
-	FilterNames []string `json:"names"` //过滤的用户名们
+	FilterStatus bool     `json:"status"` //开关
+	FilterNames  []string `json:"names"`  //过滤的用户名们
 }
 
 // api
@@ -98,6 +98,20 @@ func DefaultConfig() *JsonConfig {
 			ProxyPort:   "1234",
 			ProxyUser:   "",
 			ProxyPasswd: "", //mtp 的secret也是这个字段
+		},
+		WebHook: []*WebHook{
+			&WebHook{
+				WebHookStatus: true,
+				WebHookFilter: WebHookFilter{FilterStatus: false},
+				WebHookUrl:    "",
+				WebHookSecret: "abcde",
+			},
+		},
+		WebApi: &WebApi{
+			WebApiStatus: false,
+			WebApiHost:   "",
+			WebApiPort:   "9001",
+			WebApiToken:  "abcde",
 		},
 	}
 	if os.Getenv("Phone") != "" {

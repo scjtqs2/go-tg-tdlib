@@ -9,6 +9,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"io"
 	"os"
+	"os/signal"
 	"path"
 	"time"
 )
@@ -46,5 +47,7 @@ func main() {
 	}
 
 	app.Start(conf)
-
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	<-c
 }

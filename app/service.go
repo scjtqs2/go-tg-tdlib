@@ -41,15 +41,23 @@ func Start(conf *config.JsonConfig) {
 	}
 
 	// filter msg
-	client.FilterMsg()
+	for _,v:=range conf.WebHook{
+		client.FilterMsg(v)
+	}
+
+
 
 	client.Cron.Start()
 	// rawUpdates gets all updates comming from tdlib
-	rawUpdates := client.Cli.GetRawUpdatesChannel(100)
-	for update := range rawUpdates {
-		// Show all updates
-		log.Debug(update.Data, "\n\n")
-		log.Debug("\n\n")
-	}
+	//rawUpdates := client.Cli.GetRawUpdatesChannel(100)
+	//client.Cli.GetRawUpdatesChannel(100)
+	//for update := range rawUpdates {
+	//	// Show all updates
+	//	//log.Debug(update.Data)
+	//	//log.Debug("\n")
+	//	if update.Data!=nil{
+	//
+	//	}
+	//}
 	log.Infof("started ok \n")
 }
