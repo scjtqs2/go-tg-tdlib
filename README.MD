@@ -58,6 +58,8 @@ scjtqs/go-tg:latest
 > text_msg 是要发送的消息类容
 > 
 > 请自行修改
+> 
+> cron薅羊毛参考 `1,2,3,4,5 0 1,8,16,24 * ?`
 
 ## docker后台运行
 ```shell
