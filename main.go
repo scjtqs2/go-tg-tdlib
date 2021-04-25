@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/Arman92/go-tdlib"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/scjtqs/go-tg/app"
 	"github.com/scjtqs/go-tg/config"
+	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"io"
 	"os"
 	"os/signal"
@@ -17,7 +18,7 @@ import (
 var configPath = "config.json"
 
 func init() {
-	log.SetFormatter(&easy.Formatter{
+	logFormatter:=(&easy.Formatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
 	})
@@ -29,6 +30,7 @@ func init() {
 		log.SetLevel(log.DebugLevel)
 		log.Warnf("已开启Debug模式.")
 	}
+	log.AddHook(config.NewLocalHook(w, logFormatter, config.GetLogLevel("warn")...))
 }
 
 func main() {
@@ -45,7 +47,7 @@ func main() {
 		}
 		conf = config.Load(configPath)
 	}
-
+	webhook.Start(conf)
 	app.Start(conf)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill)

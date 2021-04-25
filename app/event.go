@@ -1,15 +1,16 @@
 package app
 
 import (
-	"fmt"
 	"github.com/Arman92/go-tdlib"
 	"github.com/scjtqs/go-tg/config"
+	"github.com/scjtqs/go-tg/entity"
 	"github.com/scjtqs/go-tg/utils"
+	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
 
-func (a *AppClient) FilterMsg(conf *config.WebHook) {
+func (a *AppClient) FilterMsg(index int,conf *config.WebHook) {
 	if !conf.WebHookStatus {
 		return
 	}
@@ -32,13 +33,13 @@ func (a *AppClient) FilterMsg(conf *config.WebHook) {
 			switch updateMsg.Message.Sender.GetMessageSenderEnum() {
 			case tdlib.MessageSenderUserType:
 				sender := updateMsg.Message.Sender.(*tdlib.MessageSenderUser)
-				log.Debugf("senderUser=%+v", sender)
+				//log.Debugf("senderUser=%+v", sender)
 				if utils.InArrayString(strconv.FormatInt(int64(sender.UserID), 10), chatIds) {
 					return true
 				}
 			case tdlib.MessageSenderChatType:
 				sender := updateMsg.Message.Sender.(*tdlib.MessageSenderChat)
-				log.Debugf("senderChat=%+v", sender)
+				//log.Debugf("senderChat=%+v", sender)
 				if utils.InArrayString(strconv.FormatInt(int64(sender.ChatID), 10), chatIds) {
 					return true
 				}
@@ -50,13 +51,20 @@ func (a *AppClient) FilterMsg(conf *config.WebHook) {
 		// We like to get UpdateNewMessage events and with a specific FilterFunc
 		receiver := a.Cli.AddEventReceiver(&tdlib.UpdateNewMessage{}, eventFilter, 5)
 		for newMsg := range receiver.Chan {
-			fmt.Println(newMsg)
 			updateMsg := (newMsg).(*tdlib.UpdateNewMessage)
 			// We assume the message content is simple text: (should be more sophisticated for general use)
 			switch updateMsg.Message.Content.GetMessageContentEnum() {
 			case "messageText":
 				msgText := updateMsg.Message.Content.(*tdlib.MessageText)
 				log.Debugf("msgText: %s", msgText.Text.Text)
+				switch updateMsg.Message.Sender.GetMessageSenderEnum() {
+				case tdlib.MessageSenderUserType:
+					sender := updateMsg.Message.Sender.(*tdlib.MessageSenderUser)
+					webhook.AddMsg(index,entity.TextMsg{UserID: sender.UserID, ChatID: updateMsg.Message.ChatID, Text: msgText.Text.Text})
+				case tdlib.MessageSenderChatType:
+					sender := updateMsg.Message.Sender.(*tdlib.MessageSenderChat)
+					webhook.AddMsg(index,entity.TextMsg{ChatID: updateMsg.Message.ChatID, Text: msgText.Text.Text,SenderChatID: sender.ChatID})
+				}
 			case "messageAnimation":
 			case "messageAudio":
 				audio := updateMsg.Message.Content.(*tdlib.MessageAudio)

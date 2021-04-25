@@ -101,9 +101,15 @@ func DefaultConfig() *JsonConfig {
 		},
 		WebHook: []*WebHook{
 			&WebHook{
-				WebHookStatus: true,
+				WebHookStatus: false,
 				WebHookFilter: WebHookFilter{FilterStatus: false},
-				WebHookUrl:    "",
+				WebHookUrl:    "httpL//192.168.50.1",
+				WebHookSecret: "abcde",
+			},
+			&WebHook{
+				WebHookStatus: false,
+				WebHookFilter: WebHookFilter{FilterStatus: false},
+				WebHookUrl:    "httpL//192.168.50.1",
 				WebHookSecret: "abcde",
 			},
 		},
@@ -194,6 +200,33 @@ func DefaultConfig() *JsonConfig {
 	}
 	if os.Getenv("ProxyPasswd") != "" {
 		conf.Proxy.ProxyPasswd = os.Getenv("ProxyPasswd")
+	}
+
+	// 将json数据写入到环境变量
+	if os.Getenv("WebHook") != "" {
+		webhook := []*WebHook{}
+		err := json.Unmarshal([]byte(os.Getenv("WebHook")), &webhook)
+		if err == nil {
+			conf.WebHook = webhook
+		}
+	}
+
+	if os.Getenv("WebApiStatus") != "" {
+		switch os.Getenv("WebApiStatus") {
+		case "true":
+			conf.WebApi.WebApiStatus = true
+		case "false":
+			conf.WebApi.WebApiStatus = false
+		}
+	}
+	if os.Getenv("WebApiHost") != "" {
+		conf.WebApi.WebApiHost = os.Getenv("WebApiHost")
+	}
+	if os.Getenv("WebApiPort") != "" {
+		conf.WebApi.WebApiPort = os.Getenv("WebApiPort")
+	}
+	if os.Getenv("WebApiToken") != "" {
+		conf.WebApi.WebApiToken = os.Getenv("WebApiToken")
 	}
 	return conf
 }

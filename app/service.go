@@ -41,8 +41,8 @@ func Start(conf *config.JsonConfig) {
 	}
 
 	// filter msg
-	for _,v:=range conf.WebHook{
-		client.FilterMsg(v)
+	for k,v:=range conf.WebHook{
+		client.FilterMsg(k,v)
 	}
 
 
