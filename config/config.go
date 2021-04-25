@@ -6,21 +6,23 @@ import (
 	"os"
 )
 
-var cronPath="cron.json"
+var cronPath = "cron.json"
 
 type JsonConfig struct {
-	Phone               string `json:"phone_number"`
-	Password            string `json:"password"`
-	AppID               string `json:"appid"`
-	AppHash             string `json:"app_hash"`
-	UseMessageDatabase  bool   `json:"use_message_database"`
-	UseFileDatabase     bool   `json:"use_file_database"`
-	UseChatInfoDatabase bool   `json:"use_chat_info_database"`
-	UseTestDataCenter   bool   `json:"use_test_data_center"`
-	DatabaseDirectory   string `json:"database_directory"`
-	FileDirectory       string `json:"file_directory"`
-	IgnoreFileNames     bool   `json:"ignore_file_name"`
-	Proxy               *Proxy  `json:"proxy"`
+	Phone               string     `json:"phone_number"`
+	Password            string     `json:"password"`
+	AppID               string     `json:"appid"`
+	AppHash             string     `json:"app_hash"`
+	UseMessageDatabase  bool       `json:"use_message_database"`
+	UseFileDatabase     bool       `json:"use_file_database"`
+	UseChatInfoDatabase bool       `json:"use_chat_info_database"`
+	UseTestDataCenter   bool       `json:"use_test_data_center"`
+	DatabaseDirectory   string     `json:"database_directory"`
+	FileDirectory       string     `json:"file_directory"`
+	IgnoreFileNames     bool       `json:"ignore_file_name"`
+	Proxy               *Proxy     `json:"proxy"`
+	WebHook             []*WebHook `json:"webhook"`
+	WebApi              *WebApi    `json:"webapi"`
 }
 
 type Proxy struct {
@@ -30,6 +32,27 @@ type Proxy struct {
 	ProxyPort   string `json:"port"`   // 1234
 	ProxyUser   string `json:"user"`   // user
 	ProxyPasswd string `json:"passwd"` //passwd
+}
+
+// webhook
+type WebHook struct {
+	WebHookStatus bool          `json:"status"`        //开关
+	WebHookUrl    string        `json:"http_post_url"` //post推送地址
+	WebHookSecret string        `json:"secret"`        //推送签名校验用的secret
+	WebHookFilter WebHookFilter `json:"filter"`		//过滤仅这些用户推送
+}
+
+type WebHookFilter struct {
+	FilterStatus bool `json:"status"` //开关
+	FilterNames []string `json:"names"` //过滤的用户名们
+}
+
+// api
+type WebApi struct {
+	WebApiStatus bool   `json:"status"`    //开关
+	WebApiHost   string `json:"bind_addr"` //绑定地址
+	WebApiPort   string `json:"port"`      //api端口地址
+	WebApiToken  string `json:"token"`     //简易的api鉴权参数
 }
 
 func Load(p string) *JsonConfig {
@@ -74,7 +97,7 @@ func DefaultConfig() *JsonConfig {
 			ProxyAddr:   "127.0.0.1",
 			ProxyPort:   "1234",
 			ProxyUser:   "",
-			ProxyPasswd: "",//mtp 的secret也是这个字段
+			ProxyPasswd: "", //mtp 的secret也是这个字段
 		},
 	}
 	if os.Getenv("Phone") != "" {
@@ -166,13 +189,13 @@ type CronJobConfig struct {
 }
 
 type CronMessage struct {
-	Cron string `json:"cron"`
+	Cron       string `json:"cron"`
 	ToUserName string `json:"to_user_name"`
-	TextMsg string `json:"text_msg"`
+	TextMsg    string `json:"text_msg"`
 }
 
 func LoadCron() *CronJobConfig {
-	p:=cronPath
+	p := cronPath
 	if !PathExists(p) {
 		log.Warnf("尝试加载配置文件 %v 失败: 文件不存在", p)
 		InitDefaultCronJobConf()
@@ -193,18 +216,18 @@ func (c CronJobConfig) Save(p string) error {
 	WriteAllText(p, string(data))
 	return nil
 }
-func InitDefaultCronJobConf()  {
-	conf:=&CronJobConfig{
+func InitDefaultCronJobConf() {
+	conf := &CronJobConfig{
 		[]*CronMessage{
 			{
-				Cron: "* * * * *",
+				Cron:       "* * * * *",
 				ToUserName: "@LvanLamCommitCodeBot",
-				TextMsg: "/start",
+				TextMsg:    "/start",
 			},
 			{
-				Cron: "* * * * *",
+				Cron:       "* * * * *",
 				ToUserName: "@TuringLabbot",
-				TextMsg: "/start",
+				TextMsg:    "/start",
 			},
 		},
 	}
