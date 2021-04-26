@@ -1,6 +1,7 @@
 package webhook
 
 import (
+	"github.com/Arman92/go-tdlib"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 )
@@ -13,13 +14,15 @@ func Start(conf *config.JsonConfig) {
 	MsgCh = make([]chan interface{}, len(conf.WebHook))
 	for k, v := range conf.WebHook {
 		index := k
+		httpClient := NewHttpClient()
+		httpClient.Init(conf, v.WebHookUrl, v.WebHookSecret, 5)
 		MsgCh[k] = make(chan interface{}, 10)
 		if v.WebHookStatus {
 			log.Infof("register hook index:%d,uri:%s,secret:%s", k, v.WebHookUrl, v.WebHookSecret)
 			go func() {
 				for {
 					msg := <-MsgCh[index]
-					log.Infof("index:%d ,msg:%+v",index, msg)
+					log.Infof("index:%d ,msg:%+v", index, msg)
 					//TODO 做推送+熔断
 				}
 			}()
@@ -29,7 +32,8 @@ func Start(conf *config.JsonConfig) {
 
 }
 
-func AddMsg(k int, msg interface{}) {
-	log.Debugf("msg index:%d added,%+v",k, msg)
+func AddMsg(k int, msg map[string]interface{}, client *tdlib.Client) {
+	log.Debugf("msg index:%d added,%+v", k, msg)
+	HttpClient.AddBot(client)
 	MsgCh[k] <- msg
 }
