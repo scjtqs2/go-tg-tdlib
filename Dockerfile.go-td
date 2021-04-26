@@ -52,7 +52,7 @@ ENV UseFileDatabase="true"
 ## UseChatInfoDatabase 使聊天数据信息存入db
 ENV UseChatInfoDatabase="true"
 ## UseTestDataCenter 是否使用测试服
-ENV ="false"
+ENV UseTestDataCenter="false"
 ENV DatabaseDirectory="./tdlib-db"
 ENV FileDirectory="./tdlib-files"
 ENV IgnoreFileNames="false"
