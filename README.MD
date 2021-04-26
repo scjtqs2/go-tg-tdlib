@@ -1,7 +1,7 @@
 # 使用说明
 > 此项目主要用于tg自己账号登录 定时发送消息给某人，例如jd羊毛机器人
 > 
-> 当前容器支持 amd64和arm64
+> 当前容器支持 amd64、i386、arm64、armhf
 
 ## 首次使用需要进行登录
 > 需要使用docker run进行登录处理
@@ -30,7 +30,7 @@ scjtqs/go-tg:latest
 > 
 > 国内阿里云镜像 registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:latest
 > 
-> 
+> 其他 环境变量，请查看 Dockerfile.go-td 里面的 ENV部分
 
 ## 定时任务配置
 > 首次运行后，当前目录会生成一个cron.json目录
