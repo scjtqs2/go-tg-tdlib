@@ -1,7 +1,7 @@
 # golang编译环境
 FROM golang:1.16-alpine3.13 as gobuilder
 
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+#RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 ENV GOPROXY http://goproxy.cn,direct
 
@@ -9,7 +9,8 @@ COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
 
 RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev zlib-dev ca-certificates tzdata
-RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /go-tdlib
+#RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /go-tdlib
+RUN git clone https://github.com/scjtqs/go-tg.git  --depth 1 /go-tdlib
 #COPY . /go-tdlib/
 
 WORKDIR /go-tdlib
