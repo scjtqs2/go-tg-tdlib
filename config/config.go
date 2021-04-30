@@ -92,9 +92,9 @@ func DefaultConfig() *JsonConfig {
 		FileDirectory:       "./tdlib-files",
 		IgnoreFileNames:     false,
 		Proxy: &Proxy{
-			ProxyStatus: true,
+			ProxyStatus: false,
 			ProxyType:   "Socks5",
-			ProxyAddr:   "127.0.0.1",
+			ProxyAddr:   "vpn.abc.com",
 			ProxyPort:   "1234",
 			ProxyUser:   "",
 			ProxyPasswd: "", //mtp 的secret也是这个字段

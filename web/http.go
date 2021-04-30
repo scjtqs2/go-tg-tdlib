@@ -60,7 +60,7 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
 			}
 		})
 	}
-	
+
 	// 通过 chatid发送消息
 	s.engine.Any("/send_msg", s.SendMessage)
 	// 通过用户名获取chatid
