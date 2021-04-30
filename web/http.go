@@ -60,38 +60,11 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
 			}
 		})
 	}
-
-	//s.engine.Any("/get_login_info", s.GetLoginInfo)
-	//s.engine.Any("/get_login_info_async", s.GetLoginInfo)
-	//
-	//s.engine.Any("/get_friend_list", s.GetFriendList)
-	//s.engine.Any("/get_friend_list_async", s.GetFriendList)
-	//
-	//s.engine.Any("/get_group_list", s.GetGroupList)
-	//s.engine.Any("/get_group_list_async", s.GetGroupList)
-	//
-	//s.engine.Any("/get_group_info", s.GetGroupInfo)
-	//s.engine.Any("/get_group_info_async", s.GetGroupInfo)
-	//
-	//s.engine.Any("/get_group_member_list", s.GetGroupMemberList)
-	//s.engine.Any("/get_group_member_list_async", s.GetGroupMemberList)
-	//
-	//s.engine.Any("/get_group_member_info", s.GetGroupMemberInfo)
-	//s.engine.Any("/get_group_member_info_async", s.GetGroupMemberInfo)
-	//
+	
 	// 通过 chatid发送消息
 	s.engine.Any("/send_msg", s.SendMessage)
 	// 通过用户名获取chatid
 	s.engine.Any("/get_chat_info", s.GetChatInfo)
-	//
-	//s.engine.Any("/send_private_msg", s.SendPrivateMessage)
-	//s.engine.Any("/send_private_msg_async", s.SendPrivateMessage)
-	//
-	//s.engine.Any("/send_group_msg", s.SendGroupMessage)
-	//s.engine.Any("/send_group_msg_async", s.SendGroupMessage)
-	//
-	//s.engine.Any("/get_status", s.GetStatus)
-	//s.engine.Any("/get_status_async", s.GetStatus)
 
 	go func() {
 		log.Infof("go-tg HTTP 服务器已启动: %v", addr)
