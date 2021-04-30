@@ -1,8 +1,10 @@
 package app
 
 import (
+	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/config"
+	"github.com/scjtqs/go-tg/web"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
@@ -41,11 +43,9 @@ func Start(conf *config.JsonConfig) {
 	}
 
 	// filter msg
-	for k,v:=range conf.WebHook{
-		client.FilterMsg(k,v)
+	for k, v := range conf.WebHook {
+		client.FilterMsg(k, v)
 	}
-
-
 
 	client.Cron.Start()
 	// rawUpdates gets all updates comming from tdlib
@@ -59,5 +59,9 @@ func Start(conf *config.JsonConfig) {
 	//
 	//	}
 	//}
+	if client.Conf.WebApi.WebApiStatus {
+		//开启 http api
+		web.HttpServer.Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli)
+	}
 	log.Infof("started ok \n")
 }

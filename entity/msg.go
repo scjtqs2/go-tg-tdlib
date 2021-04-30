@@ -12,6 +12,15 @@ func (m MSG) ToJson() string {
 	return string(b)
 }
 
+func OK(data interface{}) MSG {
+	return MSG{"data": data, "retcode": 0, "status": "ok"}
+}
+
+func Failed(code int) MSG {
+	return MSG{"data": nil, "retcode": code, "status": "failed"}
+}
+
+
 // MakeMsg struct转成MSG 用于发送
 func MakeMsg(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
