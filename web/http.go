@@ -65,6 +65,8 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
 	s.engine.Any("/send_msg", s.SendMessage)
 	// 通过用户名获取chatid
 	s.engine.Any("/get_chat_info", s.GetChatInfo)
+	// 查询当前登录用户信息
+	s.engine.Any("/getme",s.GetUserInfo)
 
 	go func() {
 		log.Infof("go-tg HTTP 服务器已启动: %v", addr)
@@ -107,6 +109,16 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 		return
 	}
 	c.JSON(200, entity.OK(chat))
+}
+
+// GetUserInfo 获取当前用户信息
+func (s *httpServer) GetUserInfo(c *gin.Context)  {
+	info,err := s.bot.GetMe()
+	if err != nil {
+		c.JSON(400,entity.Failed(400))
+		return
+	}
+	c.JSON(200,entity.OK(info))
 }
 
 func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) {
