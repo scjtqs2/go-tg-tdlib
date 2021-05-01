@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"github.com/scjtqs/go-tg/utils"
 	log "github.com/sirupsen/logrus"
 	"os"
 )
@@ -56,12 +57,12 @@ type WebApi struct {
 }
 
 func Load(p string) *JsonConfig {
-	if !PathExists(p) {
+	if !utils.PathExists(p) {
 		log.Warnf("尝试加载配置文件 %v 失败: 文件不存在", p)
 		return nil
 	}
 	c := JsonConfig{}
-	err := json.Unmarshal([]byte(ReadAllText(p)), &c)
+	err := json.Unmarshal([]byte(utils.ReadAllText(p)), &c)
 	if err != nil {
 		log.Warnf("尝试加载配置文件 %v 时出现错误: %v", p, err)
 		return nil
@@ -74,7 +75,7 @@ func (c *JsonConfig) Save(p string) error {
 	if err != nil {
 		return err
 	}
-	WriteAllText(p, string(data))
+	utils.WriteAllText(p, string(data))
 	return nil
 }
 
@@ -245,12 +246,12 @@ type CronMessage struct {
 
 func LoadCron() *CronJobConfig {
 	p := cronPath
-	if !PathExists(p) {
+	if !utils.PathExists(p) {
 		log.Warnf("尝试加载配置文件 %v 失败: 文件不存在", p)
 		InitDefaultCronJobConf()
 	}
 	c := CronJobConfig{}
-	err := json.Unmarshal([]byte(ReadAllText(p)), &c)
+	err := json.Unmarshal([]byte(utils.ReadAllText(p)), &c)
 	if err != nil {
 		log.Errorf("尝试加载配置文件 %v 时出现错误: %v", p, err)
 		panic("plese check your cron.json")
@@ -262,7 +263,7 @@ func (c CronJobConfig) Save(p string) error {
 	if err != nil {
 		return err
 	}
-	WriteAllText(p, string(data))
+	utils.WriteAllText(p, string(data))
 	return nil
 }
 func InitDefaultCronJobConf() {

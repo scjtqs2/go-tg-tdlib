@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/Arman92/go-tdlib"
 	"github.com/gin-gonic/gin"
+	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"strconv"
@@ -14,12 +15,14 @@ var HttpServer = &httpServer{}
 type httpServer struct {
 	engine *gin.Engine
 	bot    *tdlib.Client
+	conf   *config.JsonConfig
 }
 
-func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
+func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client,conf *config.JsonConfig) {
 	gin.SetMode(gin.ReleaseMode)
 	s.engine = gin.New()
 	s.bot = bot
+	s.conf = conf
 	s.engine.Use(func(c *gin.Context) {
 		if c.Request.Method != "GET" && c.Request.Method != "POST" {
 			log.Warnf("已拒绝客户端 %v 的请求: 方法错误", c.Request.RemoteAddr)

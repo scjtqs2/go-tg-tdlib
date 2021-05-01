@@ -61,7 +61,8 @@ func Start(conf *config.JsonConfig) {
 	//}
 	if client.Conf.WebApi.WebApiStatus {
 		//开启 http api
-		web.HttpServer.Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli)
+		web.HttpServer.
+			Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli,conf)
 	}
 	log.Infof("started ok \n")
 }

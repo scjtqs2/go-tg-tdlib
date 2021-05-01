@@ -5,6 +5,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/scjtqs/go-tg/app"
 	"github.com/scjtqs/go-tg/config"
+	"github.com/scjtqs/go-tg/utils"
 	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
@@ -42,7 +43,7 @@ func main() {
 		conf = config.DefaultConfig()
 		conf.Save(configPath)
 	default:
-		if !config.PathExists(configPath) {
+		if !utils.PathExists(configPath) {
 			conf = config.DefaultConfig()
 			_ = conf.Save(configPath)
 		}

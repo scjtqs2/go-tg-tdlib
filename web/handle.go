@@ -1,12 +1,18 @@
 package web
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"github.com/Arman92/go-tdlib"
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/entity"
+	"github.com/scjtqs/go-tg/utils"
 	"github.com/tidwall/gjson"
+	"io/ioutil"
+	"path"
 	"strconv"
+	"strings"
 )
 
 // SendMessage 发送信息
@@ -64,9 +70,27 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 	case entity.TEXT:
 		inputMsg = tdlib.NewInputMessageText(tdlib.NewFormattedText(msg.Get("content").String(), nil), true, true)
 	case entity.PHOTO:
-		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileGenerated(msg.Get("url").String(),"",0), nil, nil, 400, 400,
+		f := msg.Get("file").String()
+		var filePath string
+		if strings.HasPrefix(f, "http") || strings.HasPrefix(f, "https") {
+			cache := msg.Get("cache").String()
+			if cache == "" {
+				cache = "1"
+			}
+
+			hash := md5.Sum([]byte(f))
+			cacheFile := path.Join(s.conf.FileDirectory+"/photos", hex.EncodeToString(hash[:])+".cache")
+			if !utils.PathExists(cacheFile) && cache == "0" {
+				b, err := utils.GetBytes(f)
+				if err != nil {
+					return nil, err
+				}
+				_ = ioutil.WriteFile(cacheFile, b, 0644)
+			}
+			filePath = cacheFile
+		}
+		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, nil, 400, 400,
 			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
-		//return nil, errors.New("not support msg")
 	default:
 		return nil, errors.New("not support msg")
 	}
@@ -141,4 +165,3 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 	}
 	c.JSON(200, entity.OK(chat))
 }
-
