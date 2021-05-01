@@ -20,14 +20,17 @@ import (
 func (s *httpServer) SendMessage(c *gin.Context) {
 	chatID, _ := strconv.ParseInt(getParam(c, "chat_id"), 10, 64)
 	message, t := getParamWithType(c, "message")
+	log.Infof("sendMessage to chat_id=%v,message=%v", chatID, message)
 	if t == gjson.JSON {
 		inputMsg, err := s.makeMsg(message)
 		if err != nil {
+			log.Error(err)
 			c.JSON(200, entity.Failed(404, err.Error()))
 			return
 		}
 		msg, err := s.bot.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsg)
 		if err != nil {
+			log.Error(err)
 			//消息发送失败
 			c.JSON(200, entity.Failed(400, err.Error()))
 			return
@@ -35,6 +38,7 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 		c.JSON(200, entity.OK(msg))
 		return
 	}
+	log.Error("invalid json")
 	c.JSON(404, entity.Failed(404, "invalid json"))
 }
 
@@ -42,11 +46,13 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 func (s *httpServer) GetChatInfo(c *gin.Context) {
 	name := getParam(c, "name")
 	if name == "" {
+		log.Error("invalid name")
 		c.JSON(400, entity.Failed(400, "invalid name"))
 		return
 	}
 	chat, err := s.bot.SearchPublicChat(name)
 	if err != nil {
+		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
@@ -57,6 +63,7 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 func (s *httpServer) GetUserInfo(c *gin.Context) {
 	info, err := s.bot.GetMe()
 	if err != nil {
+		log.Error(err)
 		c.JSON(400, entity.Failed(400, err.Error()))
 		return
 	}
@@ -110,6 +117,7 @@ func (s *httpServer) SearchChatInfos(c *gin.Context) {
 	}
 	chat, err := s.bot.SearchChatsOnServer(query, 50)
 	if err != nil {
+		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
@@ -126,11 +134,13 @@ func (s *httpServer) GetUserByUserId(c *gin.Context) {
 	}
 	uid, err := strconv.ParseInt(userID, 10, 32)
 	if err != nil {
+		log.Error(err)
 		c.JSON(400, entity.Failed(400, "invalid userID"))
 		return
 	}
 	chat, err := s.bot.GetUser(int32(uid))
 	if err != nil {
+		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
@@ -148,6 +158,7 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 	}
 	cid, err := strconv.ParseInt(chatID, 10, 64)
 	if err != nil {
+		log.Error(err)
 		c.JSON(400, entity.Failed(400, "invalid chatID"))
 		return
 	}
@@ -158,11 +169,13 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 	}
 	mid, err := strconv.ParseInt(messageID, 10, 64)
 	if err != nil {
+		log.Error(err)
 		c.JSON(400, entity.Failed(400, "invalid messageID"))
 		return
 	}
 	chat, err := s.bot.GetMessage(cid, mid)
 	if err != nil {
+		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
