@@ -73,3 +73,6 @@ docker run  -D --restart=always --name tg_bot \
 -e ProxyPasswd="" \
 scjtqs/go-tg:latest
 ```
+
+## api 功能
+[点击查看](doc/api.md)
