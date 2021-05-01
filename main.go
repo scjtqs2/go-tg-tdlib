@@ -40,6 +40,7 @@ func main() {
 	switch os.Getenv("IS_DOCKER") {
 	case "true":
 		conf = config.DefaultConfig()
+		conf.Save(configPath)
 	default:
 		if !config.PathExists(configPath) {
 			conf = config.DefaultConfig()
