@@ -20,7 +20,7 @@ import (
 func (s *httpServer) SendMessage(c *gin.Context) {
 	chatID, _ := strconv.ParseInt(getParam(c, "chat_id"), 10, 64)
 	message, t := getParamWithType(c, "message")
-	log.Infof("sendMessage to chat_id=%v,message=%v", chatID, message)
+	log.Debugf("sendMessage to chat_id=%v,message=%v", chatID, message)
 	if t == gjson.JSON {
 		inputMsg, err := s.makeMsg(message)
 		if err != nil {
@@ -45,6 +45,7 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 // GetChatInfo 通过 名称获取 chat信息
 func (s *httpServer) GetChatInfo(c *gin.Context) {
 	name := getParam(c, "name")
+	log.Debugf("name=%s", name)
 	if name == "" {
 		log.Error("invalid name")
 		c.JSON(400, entity.Failed(400, "invalid name"))
@@ -56,6 +57,7 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
+	log.Debug("get chat info=", chat)
 	c.JSON(200, entity.OK(chat))
 }
 
@@ -67,6 +69,7 @@ func (s *httpServer) GetUserInfo(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, err.Error()))
 		return
 	}
+	log.Debug("userinfo=", info)
 	c.JSON(200, entity.OK(info))
 }
 
@@ -111,6 +114,7 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 // query
 func (s *httpServer) SearchChatInfos(c *gin.Context) {
 	query := getParam(c, "query")
+	log.Debug("query=", query)
 	if query == "" {
 		c.JSON(400, entity.Failed(400, "invalid query"))
 		return
@@ -121,6 +125,7 @@ func (s *httpServer) SearchChatInfos(c *gin.Context) {
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
+	log.Debug("SearchChatInfos chat=", chat)
 	c.JSON(200, entity.OK(chat))
 }
 
@@ -138,13 +143,14 @@ func (s *httpServer) GetUserByUserId(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid userID"))
 		return
 	}
-	chat, err := s.bot.GetUser(int32(uid))
+	user, err := s.bot.GetUser(int32(uid))
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
-	c.JSON(200, entity.OK(chat))
+	log.Debug("GetUserByUserId,user=", user)
+	c.JSON(200, entity.OK(user))
 }
 
 // GetMessage 获取消息
@@ -173,11 +179,12 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid messageID"))
 		return
 	}
-	chat, err := s.bot.GetMessage(cid, mid)
+	msg, err := s.bot.GetMessage(cid, mid)
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
 		return
 	}
-	c.JSON(200, entity.OK(chat))
+	log.Debug("GetMessage,message=", msg)
+	c.JSON(200, entity.OK(msg))
 }
