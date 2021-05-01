@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/entity"
 	"github.com/scjtqs/go-tg/utils"
+	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"path"
@@ -74,10 +75,9 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 		var filePath string
 		if strings.HasPrefix(f, "http") || strings.HasPrefix(f, "https") {
 			cache := msg.Get("cache").String()
-			if cache == "" {
+			if cache == "" || !msg.Get("cache").Exists() {
 				cache = "1"
 			}
-
 			hash := md5.Sum([]byte(f))
 			cacheFile := path.Join(s.conf.FileDirectory+"/photos", hex.EncodeToString(hash[:])+".cache")
 			if !utils.PathExists(cacheFile) && cache == "0" {
@@ -88,7 +88,10 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 				_ = ioutil.WriteFile(cacheFile, b, 0644)
 			}
 			filePath = cacheFile
+		} else {
+			filePath = f
 		}
+		log.Infof("send photo  file=%s,path=%s", f, filePath)
 		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, nil, 400, 400,
 			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
 	default:
