@@ -96,10 +96,10 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			fmt.Scanln(&password)
 			_, err := client.SendAuthPassword(password)
 			if err != nil {
-				fmt.Printf("Error sending auth password: %v", err)
+				log.Infof("Error sending auth password: %v \n", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {
-			fmt.Println("Authorization Ready! Let's rock")
+			log.Info("Authorization Ready! Let's rock \n")
 			break
 		}
 	}
