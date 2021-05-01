@@ -39,7 +39,7 @@ type WebHook struct {
 	WebHookStatus bool          `json:"status"`        //开关
 	WebHookUrl    string        `json:"http_post_url"` //post推送地址
 	WebHookSecret string        `json:"secret"`        //推送签名校验用的secret
-	WebHookFilter WebHookFilter `json:"filter"`        //过滤仅这些用户推送
+	WebHookFilter *WebHookFilter `json:"filter"`        //过滤仅这些用户推送
 }
 
 type WebHookFilter struct {
@@ -102,13 +102,13 @@ func DefaultConfig() *JsonConfig {
 		WebHook: []*WebHook{
 			&WebHook{
 				WebHookStatus: false,
-				WebHookFilter: WebHookFilter{FilterStatus: false},
+				WebHookFilter: &WebHookFilter{FilterStatus: false},
 				WebHookUrl:    "http://192.168.50.85:1234",
 				WebHookSecret: "abcde",
 			},
 			&WebHook{
 				WebHookStatus: false,
-				WebHookFilter: WebHookFilter{FilterStatus: false},
+				WebHookFilter: &WebHookFilter{FilterStatus: false},
 				WebHookUrl:    "http://192.168.50.85:1234",
 				WebHookSecret: "abcde",
 			},
@@ -204,10 +204,12 @@ func DefaultConfig() *JsonConfig {
 
 	// 将json数据写入到环境变量
 	if os.Getenv("WebHook") != "" {
-		webhook := []*WebHook{}
+		var webhook []*WebHook
 		err := json.Unmarshal([]byte(os.Getenv("WebHook")), &webhook)
 		if err == nil {
 			conf.WebHook = webhook
+		}else{
+			log.Errorf("parase webhook faild, WebHook=%s, err=%v",os.Getenv("WebHook"),err)
 		}
 	}
 
