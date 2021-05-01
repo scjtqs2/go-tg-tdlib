@@ -87,7 +87,7 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 			}
 			hash := md5.Sum([]byte(f))
 			cacheFile := path.Join("/tmp", hex.EncodeToString(hash[:])+".cache")
-			if !utils.PathExists(cacheFile) && cache == "0" {
+			if !utils.PathExists(cacheFile) || cache == "0" {
 				b, err := utils.GetBytes(f)
 				if err != nil {
 					return nil, err
