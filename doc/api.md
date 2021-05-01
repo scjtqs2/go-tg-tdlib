@@ -18,8 +18,9 @@
     "name":"@LvanLamCommitCodeBot"
 }
 ```
-
-> response
+> curl 样例 ： `curl -L -X POST 'http://ip:port/get_chat_info?access_token=你的token' -H 'Content-Type: application/json' --data-raw '{"name":"@LvanLamCommitCodeBot"}'`
+>
+> response 回包：
 ```json
 {
     "data": {
@@ -206,6 +207,12 @@
     }
 }
 ```
-
+> curl样例：
+> 
+> `curl -L -X POST 'http://ip:port/send_msg?access_token=你的token' -H 'Content-Type: application/json' --data-raw '{"chat_id": "1473260455","message": {"msgtype": "messageText","content": "123"}}'`
+> 
 ### 获取当前登录用户的信息
 > GET http://ip:port/getme?access_token=你的token
+>
+> curl 样例：
+> ``curl -L  'http://ip:port/getme?access_token=你的token'`
