@@ -76,3 +76,6 @@ scjtqs/go-tg:latest
 
 ## api 功能
 [点击查看](doc/api.md)
+
+## 使用docker-compose 方式运行
+[点击查看](doc/docker-compose.md)
