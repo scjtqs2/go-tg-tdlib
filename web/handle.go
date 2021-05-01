@@ -66,7 +66,7 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 	case entity.PHOTO:
 		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileGenerated(msg.Get("url").String(),"",0), nil, nil, 400, 400,
 			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
-		return nil, errors.New("not support msg")
+		//return nil, errors.New("not support msg")
 	default:
 		return nil, errors.New("not support msg")
 	}
