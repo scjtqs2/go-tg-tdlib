@@ -74,6 +74,8 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client,conf *config.
 	s.engine.Any("/get_userinfo_by_userid",s.GetUserByUserId)
 	// 通过chatid和messageid拉取消息信息
 	s.engine.Any("/get_message",s.GetMessage)
+	// 获取聊天列表 chatlist
+	s.engine.Any("/get_chat_list",s.getChatList)
 
 	go func() {
 		log.Infof("go-tg HTTP 服务器已启动: %v", addr)

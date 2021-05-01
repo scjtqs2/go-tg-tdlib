@@ -11,10 +11,14 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
+	"math"
 	"path"
 	"strconv"
 	"strings"
 )
+
+var haveFullChatList bool
+var allChats []*tdlib.Chat
 
 // SendMessage 发送信息
 func (s *httpServer) SendMessage(c *gin.Context) {
@@ -187,4 +191,71 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 	}
 	log.Debug("GetMessage,message=", msg)
 	c.JSON(200, entity.OK(msg))
+}
+
+// getChatList 获取聊天列表
+// limit
+func (s *httpServer) getChatList(c *gin.Context) {
+	limit := getParam(c, "limit")
+	if limit == "" {
+		limit = "1000"
+	}
+	lid, err := strconv.Atoi(limit)
+	if err != nil {
+		log.Error(err)
+		c.JSON(400, entity.Failed(400, "invalid limit"))
+		return
+	}
+	err = getChatList(s.bot, lid)
+	if err != nil {
+		log.Error(err)
+		c.JSON(400, entity.Failed(400, err.Error()))
+		return
+	}
+	c.JSON(200, entity.OK(allChats))
+}
+
+// see https://stackoverflow.com/questions/37782348/how-to-use-getchats-in-tdlib
+func getChatList(client *tdlib.Client, limit int) error {
+
+	if !haveFullChatList && limit > len(allChats) {
+		offsetOrder := int64(math.MaxInt64)
+		offsetChatID := int64(0)
+		var chatList = tdlib.NewChatListMain()
+		var lastChat *tdlib.Chat
+
+		if len(allChats) > 0 {
+			lastChat = allChats[len(allChats)-1]
+			for i := 0; i < len(lastChat.Positions); i++ {
+				//Find the main chat list
+				if lastChat.Positions[i].List.GetChatListEnum() == tdlib.ChatListMainType {
+					offsetOrder = int64(lastChat.Positions[i].Order)
+				}
+			}
+			offsetChatID = lastChat.ID
+		}
+
+		// get chats (ids) from tdlib
+		chats, err := client.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
+			offsetChatID, int32(limit-len(allChats)))
+		if err != nil {
+			return err
+		}
+		if len(chats.ChatIDs) == 0 {
+			haveFullChatList = true
+			return nil
+		}
+
+		for _, chatID := range chats.ChatIDs {
+			// get chat info from tdlib
+			chat, err := client.GetChat(chatID)
+			if err == nil {
+				allChats = append(allChats, chat)
+			} else {
+				return err
+			}
+		}
+		return getChatList(client, limit)
+	}
+	return nil
 }
