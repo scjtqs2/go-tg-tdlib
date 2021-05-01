@@ -48,15 +48,15 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 
 // GetChatInfo 通过 名称获取 chat信息
 func (s *httpServer) GetChatInfo(c *gin.Context) {
-	chatID:= getParam(c,"chat_id")
-	if chatID != ""{
-		chatid,_:=strconv.ParseInt(chatID,10,64)
-		chat,err :=s.bot.GetChat(chatid)
+	chatID := getParam(c, "chat_id")
+	if chatID != "" {
+		chatid, _ := strconv.ParseInt(chatID, 10, 64)
+		chat, err := s.bot.GetChat(chatid)
 		if err != nil {
-			c.JSON(400,entity.Failed(400,err.Error()))
+			c.JSON(400, entity.Failed(400, err.Error()))
 			return
 		}
-		c.JSON(200,entity.OK(chat))
+		c.JSON(200, entity.OK(chat))
 		return
 	}
 	name := getParam(c, "name")
@@ -172,7 +172,7 @@ func (s *httpServer) GetUserByUserId(c *gin.Context) {
 // chatID
 // messageID
 func (s *httpServer) GetMessage(c *gin.Context) {
-	chatID := getParam(c, "chatID")
+	chatID := getParam(c, "chat_id")
 	if chatID == "" {
 		c.JSON(400, entity.Failed(400, "invalid chatID"))
 		return
@@ -183,7 +183,7 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid chatID"))
 		return
 	}
-	messageID := getParam(c, "messageID")
+	messageID := getParam(c, "message_id")
 	if messageID == "" {
 		c.JSON(400, entity.Failed(400, "invalid messageID"))
 		return
@@ -211,19 +211,29 @@ func (s *httpServer) getChatList(c *gin.Context) {
 	if limit == "" {
 		limit = "1000"
 	}
-	lid, err := strconv.Atoi(limit)
+	lid, err := strconv.ParseInt(limit, 10, 32)
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, "invalid limit"))
 		return
 	}
-	err = getChatList(s.bot, lid)
+	offset := getParam(c, "offset")
+	offsetOrder, err := strconv.ParseInt(offset, 10, 64)
+	if err != nil {
+		offsetOrder=int64(0)
+	}
+	offsetChatID := int64(0)
+	var chatList = tdlib.NewChatListMain()
+
+	// get chats (ids) from tdlib
+	chats, err := s.bot.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
+		offsetChatID, int32(lid))
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, err.Error()))
 		return
 	}
-	c.JSON(200, entity.OK(allChats))
+	c.JSON(200, entity.OK(chats))
 }
 
 // see https://stackoverflow.com/questions/37782348/how-to-use-getchats-in-tdlib
