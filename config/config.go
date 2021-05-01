@@ -103,13 +103,13 @@ func DefaultConfig() *JsonConfig {
 			&WebHook{
 				WebHookStatus: false,
 				WebHookFilter: WebHookFilter{FilterStatus: false},
-				WebHookUrl:    "httpL//192.168.50.1",
+				WebHookUrl:    "http://192.168.50.85:1234",
 				WebHookSecret: "abcde",
 			},
 			&WebHook{
 				WebHookStatus: false,
 				WebHookFilter: WebHookFilter{FilterStatus: false},
-				WebHookUrl:    "httpL//192.168.50.1",
+				WebHookUrl:    "http://192.168.50.85:1234",
 				WebHookSecret: "abcde",
 			},
 		},
