@@ -14,10 +14,10 @@ func Start(conf *config.JsonConfig) {
 	MsgCh = make([]chan interface{}, len(conf.WebHook))
 	for k, v := range conf.WebHook {
 		index := k
-		httpClient := NewHttpClient()
-		httpClient.Init(conf, v.WebHookUrl, v.WebHookSecret, 5)
 		MsgCh[k] = make(chan interface{}, 10)
 		if v.WebHookStatus {
+			httpClient := NewHttpClient()
+			httpClient.Init(conf, v.WebHookUrl, v.WebHookSecret, 5)
 			log.Infof("register hook index:%d,uri:%s,secret:%s", k, v.WebHookUrl, v.WebHookSecret)
 			go func() {
 				for {
@@ -27,7 +27,6 @@ func Start(conf *config.JsonConfig) {
 				}
 			}()
 		}
-
 	}
 
 }
