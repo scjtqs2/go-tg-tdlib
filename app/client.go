@@ -75,31 +75,31 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	for {
 		currentState, _ := client.Authorize()
 		if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPhoneNumberType {
-			log.Info("Enter phone: \n")
+			log.Print("Enter phone: ")
 			var number string
 			fmt.Scanln(&number)
 			_, err := client.SendPhoneNumber(number)
 			if err != nil {
-				log.Infof("Error sending phone number: %v \n", err)
+				log.Infof("Error sending phone number: %v", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
-			log.Info("Enter code: \n")
+			log.Print("Enter code: ")
 			var code string
 			fmt.Scanln(&code)
 			_, err := client.SendAuthCode(code)
 			if err != nil {
-				log.Infof("Error sending auth code : %v \n", err)
+				log.Infof("Error sending auth code : %v ", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPasswordType {
-			log.Info("Enter Password: \n")
+			log.Print("Enter Password: ")
 			var password string
 			fmt.Scanln(&password)
 			_, err := client.SendAuthPassword(password)
 			if err != nil {
-				log.Infof("Error sending auth password: %v \n", err)
+				log.Infof("Error sending auth password: %v" , err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {
-			log.Info("Authorization Ready! Let's rock \n")
+			log.Info("Authorization Ready! Let's rock")
 			break
 		}
 	}
