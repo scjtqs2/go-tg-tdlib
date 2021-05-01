@@ -3,8 +3,6 @@ package web
 import (
 	"github.com/Arman92/go-tdlib"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
-	"github.com/scjtqs/go-tg/entity"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"strconv"
@@ -67,6 +65,12 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
 	s.engine.Any("/get_chat_info", s.GetChatInfo)
 	// 查询当前登录用户信息
 	s.engine.Any("/getme",s.GetUserInfo)
+	// 搜索chat
+	s.engine.Any("/search_chat_infos",s.SearchChatInfos)
+	// 通过用户id查询用户信息
+	s.engine.Any("/get_userinfo_by_userid",s.GetUserByUserId)
+	// 通过chatid和messageid拉取消息信息
+	s.engine.Any("/get_message",s.GetMessage)
 
 	go func() {
 		log.Infof("go-tg HTTP 服务器已启动: %v", addr)
@@ -74,68 +78,6 @@ func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client) {
 	}()
 }
 
-// SendMessage 发送信息
-func (s *httpServer) SendMessage(c *gin.Context) {
-	chatID, _ := strconv.ParseInt(getParam(c, "chat_id"), 10, 64)
-	message, t := getParamWithType(c, "message")
-	if t == gjson.JSON {
-		inputMsg, err := s.makeMsg(message)
-		if err != nil {
-			c.JSON(200, entity.Failed(404))
-			return
-		}
-		msg, err := s.bot.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsg)
-		if err != nil {
-			//消息发送失败
-			c.JSON(200, entity.Failed(400))
-			return
-		}
-		c.JSON(200, entity.OK(msg))
-		return
-	}
-	c.JSON(404, entity.Failed(404))
-}
-
-// GetChatInfo 通过 名称获取 chat信息
-func (s *httpServer) GetChatInfo(c *gin.Context) {
-	name := getParam(c, "name")
-	if name == "" {
-		c.JSON(400, entity.Failed(400))
-		return
-	}
-	chat, err := s.bot.SearchPublicChat(name)
-	if err != nil {
-		c.JSON(200, entity.Failed(400))
-		return
-	}
-	c.JSON(200, entity.OK(chat))
-}
-
-// GetUserInfo 获取当前用户信息
-func (s *httpServer) GetUserInfo(c *gin.Context)  {
-	info,err := s.bot.GetMe()
-	if err != nil {
-		c.JSON(400,entity.Failed(400))
-		return
-	}
-	c.JSON(200,entity.OK(info))
-}
-
-func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) {
-	var inputMsg tdlib.InputMessageContent
-	msg := gjson.Parse(message)
-	switch msg.Get("msgtype").String() {
-	case entity.TEXT:
-		inputMsg = tdlib.NewInputMessageText(tdlib.NewFormattedText(msg.Get("content").String(), nil), true, true)
-	case entity.PHOTO:
-		//inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal("./bunny.jpg"), nil, nil, 400, 400,
-		//	tdlib.NewFormattedText("A photo sent from go-tdlib!", nil), 0)
-		return nil, errors.New("not support msg")
-	default:
-		return nil, errors.New("not support msg")
-	}
-	return inputMsg, nil
-}
 
 func getParam(c *gin.Context, k string) string {
 	p, _ := getParamWithType(c, k)

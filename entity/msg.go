@@ -16,8 +16,8 @@ func OK(data interface{}) MSG {
 	return MSG{"data": data, "retcode": 0, "status": "ok"}
 }
 
-func Failed(code int) MSG {
-	return MSG{"data": nil, "retcode": code, "status": "failed"}
+func Failed(code int,errmsg string) MSG {
+	return MSG{"data": nil,"msg":errmsg, "retcode": code, "status": "failed"}
 }
 
 
