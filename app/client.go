@@ -75,23 +75,23 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	for {
 		currentState, _ := client.Authorize()
 		if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPhoneNumberType {
-			fmt.Print("Enter phone: ")
+			log.Info("Enter phone: \n")
 			var number string
 			fmt.Scanln(&number)
 			_, err := client.SendPhoneNumber(number)
 			if err != nil {
-				fmt.Printf("Error sending phone number: %v", err)
+				log.Infof("Error sending phone number: %v \n", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
-			fmt.Print("Enter code: ")
+			log.Info("Enter code: \n")
 			var code string
 			fmt.Scanln(&code)
 			_, err := client.SendAuthCode(code)
 			if err != nil {
-				fmt.Printf("Error sending auth code : %v", err)
+				log.Infof("Error sending auth code : %v \n", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPasswordType {
-			fmt.Print("Enter Password: ")
+			log.Info("Enter Password: \n")
 			var password string
 			fmt.Scanln(&password)
 			_, err := client.SendAuthPassword(password)
