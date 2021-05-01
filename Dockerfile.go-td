@@ -25,15 +25,15 @@ RUN go mod tidy \
 #
 FROM alpine:3.13
 
-COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
-COPY --from=gobuilder /go-tdlib  /go-tdlib
+#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
+#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
+#COPY --from=gobuilder /go-tdlib  /go-tdlib
 COPY --from=gobuilder /go-tg  /go-tg
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 #RUN apk update && apk add --no-cache libc-dev openssl-dev zlib-dev && rm -rf /var/cache/apk/*
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata \
+RUN apk update && apk add --no-cache tzdata libstdc++ \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \
