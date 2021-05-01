@@ -48,6 +48,17 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 
 // GetChatInfo 通过 名称获取 chat信息
 func (s *httpServer) GetChatInfo(c *gin.Context) {
+	chatID:= getParam(c,"chat_id")
+	if chatID != ""{
+		chatid,_:=strconv.ParseInt(chatID,10,64)
+		chat,err :=s.bot.GetChat(chatid)
+		if err != nil {
+			c.JSON(400,entity.Failed(400,err.Error()))
+			return
+		}
+		c.JSON(200,entity.OK(chat))
+		return
+	}
 	name := getParam(c, "name")
 	log.Debugf("name=%s", name)
 	if name == "" {
@@ -105,7 +116,7 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 		} else {
 			filePath = f
 		}
-		log.Infof("send photo  file=%s,path=%s", f, filePath)
+		log.Debugf("send photo  file=%s,path=%s", f, filePath)
 		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, nil, 400, 400,
 			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
 	default:
