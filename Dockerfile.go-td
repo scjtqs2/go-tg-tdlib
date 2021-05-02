@@ -8,14 +8,19 @@ ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
 
-RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev zlib-dev ca-certificates tzdata && mkdir /go-tdlib
+RUN apk update && apk add --no-cache git gcc libc-dev g++ make cmake openssl-dev zlib-dev ca-certificates tzdata \
+    alpine-sdk linux-headers  gperf php php-ctype \
+    openssl-libs-static zlib-static \
+    zlib openssl \
+    && mkdir /go-tdlib
 #RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /go-tdlib/src/
 #RUN git clone https://github.com/scjtqs/go-tg.git  --depth 1 /go-tdlib/src/
 COPY . /go-tdlib/src/
 
 WORKDIR /go-tdlib/src
+## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go mod tidy \
-    && CGO_ENABLED=1 go build -ldflags="-s -w" -installsuffix cgo -o go-tg \
+    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 
