@@ -234,6 +234,8 @@
 ```json
 {
   "chat_id": "1473260455",
+  "msg_trapt_id": 0,
+  "msg_replay_id": 0,
   "message": {
     "msgtype": "messageText",
     "content": "123"
@@ -244,10 +246,13 @@
 | 字段 |是否必须 |字段类型 |说明|
 |---|---|---|---|
 | chat_id|是| string| 聊天id|
+| msg_trapt_id|是| string| trapt消息id|
+| msg_replay_id|是| int64| 回复聊天的消息id|
 | message|是| object| 消息体|
 | msgtype|是| string| 消息类型 messageText、messagePhoto|
 | content|是| string| 文本消息时，为消息内容。photo时为图片底部说明|
 | file|否| string| messagePhoto 时必填，支持绝对路径的path和 url地址|
+| sfid|否| string| messagePhoto 时选填，stickerFileId|
 | cache|否| string| messagePhoto 时选填，是否对url开启缓存功能，"1"开启。默认为"0"|
 
 > curl样例：

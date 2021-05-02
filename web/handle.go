@@ -24,15 +24,37 @@ var allChats []*tdlib.Chat
 func (s *httpServer) SendMessage(c *gin.Context) {
 	chatID, _ := strconv.ParseInt(getParam(c, "chat_id"), 10, 64)
 	message, t := getParamWithType(c, "message")
+
 	log.Debugf("sendMessage to chat_id=%v,message=%v", chatID, message)
 	if t == gjson.JSON {
+		messTraptIdstr, t := getParamWithType(c, "msg_trapt_id")
+		var messTraptId int64
+		var replay_id int64
+		var err error
+		if t != gjson.Number {
+			messTraptId, err = strconv.ParseInt(messTraptIdstr, 10, 64)
+			if err != nil {
+				messTraptId = int64(0)
+			}
+		} else {
+			messTraptId, _ = strconv.ParseInt(messTraptIdstr, 10, 64)
+		}
+		replay_id_str, t := getParamWithType(c, "msg_replay_id")
+		if t != gjson.Number {
+			replay_id, err = strconv.ParseInt(replay_id_str, 10, 64)
+			if err != nil {
+				replay_id = int64(0)
+			}
+		} else {
+			replay_id, _ = strconv.ParseInt(replay_id_str, 10, 64)
+		}
 		inputMsg, err := s.makeMsg(message)
 		if err != nil {
 			log.Error(err)
 			c.JSON(200, entity.Failed(404, err.Error()))
 			return
 		}
-		msg, err := s.bot.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsg)
+		msg, err := s.bot.SendMessage(chatID, messTraptId, replay_id, nil, nil, inputMsg)
 		if err != nil {
 			log.Error(err)
 			//消息发送失败
@@ -116,8 +138,15 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 		} else {
 			filePath = f
 		}
+		var addedStickerFileIds []int32
+		stickerFileId:=msg.Get("sfid").Int()
+		if stickerFileId==0{
+			addedStickerFileIds=nil
+		}else{
+			addedStickerFileIds=[]int32{int32(stickerFileId)}
+		}
 		log.Debugf("send photo  file=%s,path=%s", f, filePath)
-		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, nil, 400, 400,
+		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, addedStickerFileIds, 400, 400,
 			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
 	default:
 		return nil, errors.New("not support msg")
@@ -220,7 +249,7 @@ func (s *httpServer) getChatList(c *gin.Context) {
 	offset := getParam(c, "offset")
 	offsetOrder, err := strconv.ParseInt(offset, 10, 64)
 	if err != nil {
-		offsetOrder=int64(0)
+		offsetOrder = int64(0)
 	}
 	offsetChatID := int64(0)
 	var chatList = tdlib.NewChatListMain()
