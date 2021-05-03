@@ -5,6 +5,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/config"
 	"github.com/scjtqs/go-tg/web"
+	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
@@ -64,5 +65,6 @@ func Start(conf *config.JsonConfig) {
 		web.HttpServer.
 			Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli,conf)
 	}
+	webhook.Start(conf,client.Cli)
 	log.Infof("started ok \n")
 }

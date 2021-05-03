@@ -139,11 +139,11 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 			filePath = f
 		}
 		var addedStickerFileIds []int32
-		stickerFileId:=msg.Get("sfid").Int()
-		if stickerFileId==0{
-			addedStickerFileIds=nil
-		}else{
-			addedStickerFileIds=[]int32{int32(stickerFileId)}
+		stickerFileId := msg.Get("sfid").Int()
+		if stickerFileId == 0 {
+			addedStickerFileIds = nil
+		} else {
+			addedStickerFileIds = []int32{int32(stickerFileId)}
 		}
 		log.Debugf("send photo  file=%s,path=%s", f, filePath)
 		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, addedStickerFileIds, 400, 400,
@@ -308,4 +308,25 @@ func getChatList(client *tdlib.Client, limit int) error {
 		return getChatList(client, limit)
 	}
 	return nil
+}
+
+func (s *httpServer) GetMessagesByChatID(c *gin.Context) {
+	chatID := getParam(c, "chat_id")
+	if chatID == "" {
+		c.JSON(400, entity.Failed(400, "invalid chatID"))
+		return
+	}
+	cid, err := strconv.ParseInt(chatID, 10, 64)
+	if err != nil {
+		log.Error(err)
+		c.JSON(400, entity.Failed(400, "invalid chatID"))
+		return
+	}
+	messages, err := s.bot.GetMessages(cid, nil)
+	if err != nil {
+		log.Error(err)
+		c.JSON(400, entity.Failed(400, err.Error()))
+		return
+	}
+	c.JSON(200, entity.OK(messages))
 }

@@ -15,6 +15,7 @@ type AppClient struct {
 	Cron *cron.Cron
 }
 
+// NewClient 初始化 bot方法
 func NewClient(conf *config.JsonConfig) *AppClient {
 	// Create new instance of client
 	client := tdlib.NewClient(tdlib.Config{
@@ -67,6 +68,8 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 				panic("error proxy port")
 			}
 			client.AddProxy(conf.Proxy.ProxyAddr, int32(port), true, tdlib.NewProxyTypeMtproto(conf.Proxy.ProxyPasswd))
+		default:
+			log.Fatalf("proxyType error,only  'Socks5'、'HTTP'、'HTTPS'、'MtProto' supportd for proxyType ,proxyConf=%+v", conf.Proxy)
 		}
 	}
 
@@ -78,10 +81,12 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			log.Print("Enter phone: ")
 			var number string
 			fmt.Scanln(&number)
+			conf.Phone = number
 			_, err := client.SendPhoneNumber(number)
 			if err != nil {
 				log.Infof("Error sending phone number: %v", err)
 			}
+			conf.Save("config.json")
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
 			log.Print("Enter code: ")
 			var code string
@@ -94,10 +99,12 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			log.Print("Enter Password: ")
 			var password string
 			fmt.Scanln(&password)
+			conf.Password = password
 			_, err := client.SendAuthPassword(password)
 			if err != nil {
-				log.Infof("Error sending auth password: %v" , err)
+				log.Infof("Error sending auth password: %v", err)
 			}
+			conf.Save("config.json")
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {
 			log.Info("Authorization Ready! Let's rock")
 			break
@@ -109,6 +116,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	}
 }
 
+// SendMessageByName 给cron的定时发送使用 仅支持文本消息
 func (a *AppClient) SendMessageByName(name string, message string) error {
 	chat, err := a.Cli.SearchPublicChat(name)
 	if err != nil {
@@ -117,6 +125,6 @@ func (a *AppClient) SendMessageByName(name string, message string) error {
 	}
 	chatID := chat.ID
 	inputMsgTxt := tdlib.NewInputMessageText(tdlib.NewFormattedText(message, nil), true, true)
-	_,err=a.Cli.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsgTxt)
+	_, err = a.Cli.SendMessage(chatID, int64(0), int64(0), nil, nil, inputMsgTxt)
 	return err
 }

@@ -22,21 +22,18 @@ type httpClient struct {
 	Conf    *config.JsonConfig
 }
 
-func NewHttpClient() *httpClient {
-	return &httpClient{}
+func NewHttpClient(config *config.JsonConfig, addr string, secret string, timeout int32,bot *tdlib.Client) *httpClient {
+	HttpClient= &httpClient{
+		Secret: secret,
+		Addr: addr,
+		Timeout: timeout,
+		Conf: config,
+		Bot: bot,
+	}
+	log.Infof("HTTP POST上报器已启动: %v", addr)
+	return HttpClient
 }
 
-func (c *httpClient) Init(config *config.JsonConfig, addr string, secret string, timeout int32) {
-	c.Secret = secret
-	c.Addr = addr
-	c.Timeout = timeout
-	if c.Timeout < 5 {
-		c.Timeout = 5
-	}
-	c.Conf = config
-	HttpClient = c
-	log.Infof("HTTP POST上报器已启动: %v", addr)
-}
 
 func (c *httpClient) PushEvent(m entity.MSG) {
 	var res string

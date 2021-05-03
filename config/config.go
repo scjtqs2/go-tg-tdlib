@@ -81,8 +81,8 @@ func (c *JsonConfig) Save(p string) error {
 
 func DefaultConfig() *JsonConfig {
 	conf := &JsonConfig{
-		Phone:               "+8618611500511",
-		Password:            "12345",
+		Phone:               "",
+		Password:            "",
 		AppID:               "187786",
 		AppHash:             "e782045df67ba48e441ccb105da8fc85",
 		UseMessageDatabase:  true,

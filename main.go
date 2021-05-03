@@ -6,7 +6,6 @@ import (
 	"github.com/scjtqs/go-tg/app"
 	"github.com/scjtqs/go-tg/config"
 	"github.com/scjtqs/go-tg/utils"
-	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"io"
@@ -49,7 +48,6 @@ func main() {
 		}
 		conf = config.Load(configPath)
 	}
-	webhook.Start(conf)
 	app.Start(conf)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill)
