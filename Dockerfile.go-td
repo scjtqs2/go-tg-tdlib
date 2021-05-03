@@ -3,7 +3,6 @@ FROM golang:1.16-alpine3.13 as gobuilder
 
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
-ENV GOPROXY http://goproxy.cn,direct
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
@@ -19,7 +18,8 @@ COPY . /go-tdlib/src/
 
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
-RUN go mod tidy \
+RUN go env -w GOPROXY=https://goproxy.cn,direct \
+    && go mod tidy \
     && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
@@ -38,7 +38,7 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/r
 
 #RUN apk update && apk add --no-cache libc-dev openssl-dev zlib-dev && rm -rf /var/cache/apk/*
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata libstdc++ \
+RUN apk update && apk add --no-cache tzdata  \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \
