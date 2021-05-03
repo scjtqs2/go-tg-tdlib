@@ -19,19 +19,21 @@ type AppClient struct {
 func NewClient(conf *config.JsonConfig) *AppClient {
 	// Create new instance of client
 	client := tdlib.NewClient(tdlib.Config{
-		APIID:               conf.AppID,
-		APIHash:             conf.AppHash,
-		SystemLanguageCode:  "en",
-		DeviceModel:         "Server",
-		SystemVersion:       "1.0.0",
-		ApplicationVersion:  "1.0.0",
-		UseMessageDatabase:  conf.UseMessageDatabase,
-		UseFileDatabase:     conf.UseFileDatabase,
-		UseChatInfoDatabase: conf.UseChatInfoDatabase,
-		UseTestDataCenter:   conf.UseTestDataCenter,
-		DatabaseDirectory:   conf.DatabaseDirectory,
-		FileDirectory:       conf.FileDirectory,
-		IgnoreFileNames:     conf.IgnoreFileNames,
+		APIID:                  conf.AppID,
+		APIHash:                conf.AppHash,
+		SystemLanguageCode:     "en",
+		DeviceModel:            "Docker_Server",
+		SystemVersion:          "1.0.0",
+		ApplicationVersion:     "1.0.0",
+		UseMessageDatabase:     conf.UseMessageDatabase,
+		UseFileDatabase:        conf.UseFileDatabase,
+		UseChatInfoDatabase:    conf.UseChatInfoDatabase,
+		UseTestDataCenter:      conf.UseTestDataCenter,
+		DatabaseDirectory:      conf.DatabaseDirectory,
+		FileDirectory:          conf.FileDirectory,
+		IgnoreFileNames:        conf.IgnoreFileNames,
+		UseSecretChats:         true,
+		EnableStorageOptimizer: true,
 	})
 
 	// You can set user-name and password to empty of don't need it
