@@ -24,6 +24,8 @@ scjtqs/go-tg:latest
 > 
 > AppHash 可不填
 > 
+> ProxyStatus 是否开启 网络代理，默认为 "false"
+> 
 > ProxyType 支持`Socks5`、`HTTP`、`HTTPS`、`MtProto`
 > 
 > ProxyPasswd 如果是MtProto 这里填secret 
@@ -33,6 +35,12 @@ scjtqs/go-tg:latest
 > 国内阿里云镜像 registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:latest
 > 
 > 其他 环境变量，请查看 Dockerfile.go-td 里面的 ENV部分
+> 
+> WebApiStatus 是否开启api，默认为 "false"。要开启请填 "true"
+> 
+> WebApiPort api监听端口，默认"9001"
+> 
+> WebApiToken api鉴权token，默认 "abcde"
 
 ## 定时任务配置
 > 首次运行后，当前目录会生成一个cron.json目录
