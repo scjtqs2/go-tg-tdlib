@@ -23,7 +23,7 @@ func Start(conf *config.JsonConfig, bot *tdlib.Client) {
 			go func() {
 				for {
 					msg := <-MsgCh[index]
-					log.Infof("index:%d ,msg:%+v", index, msg)
+					log.Debugf("index:%d ,msg:%+v", index, msg)
 					//TODO 做推送+熔断
 					pushClient.PushEvent(msg)
 				}
