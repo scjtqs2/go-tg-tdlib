@@ -22,20 +22,19 @@ type httpClient struct {
 	Conf    *config.JsonConfig
 }
 
-func NewHttpClient(config *config.JsonConfig, addr string, secret string, timeout int32,bot *tdlib.Client) *httpClient {
-	HttpClient= &httpClient{
-		Secret: secret,
-		Addr: addr,
+func NewHttpClient(config *config.JsonConfig, addr string, secret string, timeout int32, bot *tdlib.Client) *httpClient {
+	HttpClient = &httpClient{
+		Secret:  secret,
+		Addr:    addr,
 		Timeout: timeout,
-		Conf: config,
-		Bot: bot,
+		Conf:    config,
+		Bot:     bot,
 	}
 	log.Infof("HTTP POST上报器已启动: %v", addr)
 	return HttpClient
 }
 
-
-func (c *httpClient) PushEvent(m entity.MSG) {
+func (c *httpClient) PushEvent(m *entity.MSG) {
 	var res string
 	err := gout.POST(c.Addr).SetJSON(m).BindBody(&res).SetHeader(func() gout.H {
 		h := gout.H{

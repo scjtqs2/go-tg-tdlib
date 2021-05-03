@@ -57,128 +57,128 @@ func (a *AppClient) FilterMsg(index int, conf *config.WebHook) {
 			case "messageText":
 				msgText := updateMsg.Message.Content.(*tdlib.MessageText)
 				log.Debugf("msgText: %s", msgText.Text.Text)
-				a.makeMsgPush(index,"messageText",updateMsg.Message)
+				a.makeMsgPush(index, "messageText", updateMsg.Message)
 			case "messageAnimation":
-				a.makeMsgPush(index,"messageAnimation",updateMsg.Message)
+				a.makeMsgPush(index, "messageAnimation", updateMsg.Message)
 			case "messageAudio":
 				audio := updateMsg.Message.Content.(*tdlib.MessageAudio)
 				log.Debugf("audio: %+v", audio)
-				a.makeMsgPush(index,"messageAudio",updateMsg.Message)
+				a.makeMsgPush(index, "messageAudio", updateMsg.Message)
 			case "messageDocument":
 				doc := updateMsg.Message.Content.(*tdlib.MessageDocument)
 				log.Debugf("document:%+v", doc)
-				a.makeMsgPush(index,"messageDocument",updateMsg.Message)
+				a.makeMsgPush(index, "messageDocument", updateMsg.Message)
 			case "messagePhoto":
 				photo := updateMsg.Message.Content.(*tdlib.MessagePhoto)
 				log.Debugf("photo:%+v", photo)
-				a.makeMsgPush(index,"messagePhoto",updateMsg.Message)
+				a.makeMsgPush(index, "messagePhoto", updateMsg.Message)
 			case "messageExpiredPhoto":
 				expPhoto := updateMsg.Message.Content.(*tdlib.MessageExpiredPhoto)
 				log.Debugf("messageExpiredPhoto:%+v", expPhoto)
-				a.makeMsgPush(index,"messageExpiredPhoto",updateMsg.Message)
+				a.makeMsgPush(index, "messageExpiredPhoto", updateMsg.Message)
 			case "messageSticker":
-				a.makeMsgPush(index,"messageSticker",updateMsg.Message)
+				a.makeMsgPush(index, "messageSticker", updateMsg.Message)
 			case "messageVideo":
 				video := updateMsg.Message.Content.(*tdlib.MessageVideo)
 				log.Debugf("video:%+v", video)
-				a.makeMsgPush(index,"messageVideo",updateMsg.Message)
+				a.makeMsgPush(index, "messageVideo", updateMsg.Message)
 			case "messageExpiredVideo":
-				a.makeMsgPush(index,"messageExpiredVideo",updateMsg.Message)
+				a.makeMsgPush(index, "messageExpiredVideo", updateMsg.Message)
 			case "messageVideoNote":
-				a.makeMsgPush(index,"messageVideoNote",updateMsg.Message)
+				a.makeMsgPush(index, "messageVideoNote", updateMsg.Message)
 			case "messageVoiceNote":
-				a.makeMsgPush(index,"messageVoiceNote",updateMsg.Message)
+				a.makeMsgPush(index, "messageVoiceNote", updateMsg.Message)
 			case "messageLocation":
-				a.makeMsgPush(index,"messageLocation",updateMsg.Message)
+				a.makeMsgPush(index, "messageLocation", updateMsg.Message)
 			case "messageVenue":
-				a.makeMsgPush(index,"messageVenue",updateMsg.Message)
+				a.makeMsgPush(index, "messageVenue", updateMsg.Message)
 			case "messageContact":
-				a.makeMsgPush(index,"messageContact",updateMsg.Message)
+				a.makeMsgPush(index, "messageContact", updateMsg.Message)
 			case "messageDice":
-				a.makeMsgPush(index,"messageDice",updateMsg.Message)
+				a.makeMsgPush(index, "messageDice", updateMsg.Message)
 			case "messageGame":
-				a.makeMsgPush(index,"messageGame",updateMsg.Message)
+				a.makeMsgPush(index, "messageGame", updateMsg.Message)
 			case "messagePoll":
-				a.makeMsgPush(index,"messagePoll",updateMsg.Message)
+				a.makeMsgPush(index, "messagePoll", updateMsg.Message)
 			case "messageInvoice":
-				a.makeMsgPush(index,"messageInvoice",updateMsg.Message)
+				a.makeMsgPush(index, "messageInvoice", updateMsg.Message)
 			case "messageCall":
-				a.makeMsgPush(index,"messageCall",updateMsg.Message)
+				a.makeMsgPush(index, "messageCall", updateMsg.Message)
 			case "messageVoiceChatStarted":
-				a.makeMsgPush(index,"messageVoiceChatStarted",updateMsg.Message)
+				a.makeMsgPush(index, "messageVoiceChatStarted", updateMsg.Message)
 			case "messageVoiceChatEnded":
-				a.makeMsgPush(index,"messageVoiceChatEnded",updateMsg.Message)
+				a.makeMsgPush(index, "messageVoiceChatEnded", updateMsg.Message)
 			case "messageInviteVoiceChatParticipants":
-				a.makeMsgPush(index,"messageInviteVoiceChatParticipants",updateMsg.Message)
+				a.makeMsgPush(index, "messageInviteVoiceChatParticipants", updateMsg.Message)
 			case "messageBasicGroupChatCreate":
-				a.makeMsgPush(index,"messageBasicGroupChatCreate",updateMsg.Message)
+				a.makeMsgPush(index, "messageBasicGroupChatCreate", updateMsg.Message)
 			case "messageSupergroupChatCreate":
-				a.makeMsgPush(index,"messageSupergroupChatCreate",updateMsg.Message)
+				a.makeMsgPush(index, "messageSupergroupChatCreate", updateMsg.Message)
 			case "messageChatChangeTitle":
-				a.makeMsgPush(index,"messageChatChangeTitle",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatChangeTitle", updateMsg.Message)
 			case "messageChatChangePhoto":
-				a.makeMsgPush(index,"messageChatChangePhoto",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatChangePhoto", updateMsg.Message)
 			case "messageChatDeletePhoto":
-				a.makeMsgPush(index,"messageChatDeletePhoto",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatDeletePhoto", updateMsg.Message)
 			case "messageChatAddMembers":
-				a.makeMsgPush(index,"messageChatAddMembers",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatAddMembers", updateMsg.Message)
 			case "messageChatJoinByLink":
-				a.makeMsgPush(index,"messageChatJoinByLink",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatJoinByLink", updateMsg.Message)
 			case "messageChatDeleteMember":
-				a.makeMsgPush(index,"messageChatDeleteMember",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatDeleteMember", updateMsg.Message)
 			case "messageChatUpgradeTo":
-				a.makeMsgPush(index,"messageChatUpgradeTo",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatUpgradeTo", updateMsg.Message)
 			case "messageChatUpgradeFrom":
-				a.makeMsgPush(index,"messageChatUpgradeFrom",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatUpgradeFrom", updateMsg.Message)
 			case "messagePinMessage":
-				a.makeMsgPush(index,"messagePinMessage",updateMsg.Message)
+				a.makeMsgPush(index, "messagePinMessage", updateMsg.Message)
 			case "messageScreenshotTaken":
-				a.makeMsgPush(index,"messageScreenshotTaken",updateMsg.Message)
+				a.makeMsgPush(index, "messageScreenshotTaken", updateMsg.Message)
 			case "messageChatSetTTL":
-				a.makeMsgPush(index,"messageChatSetTTL",updateMsg.Message)
+				a.makeMsgPush(index, "messageChatSetTTL", updateMsg.Message)
 			case "messageCustomServiceAction":
-				a.makeMsgPush(index,"messageCustomServiceAction",updateMsg.Message)
+				a.makeMsgPush(index, "messageCustomServiceAction", updateMsg.Message)
 			case "messageGameScore":
-				a.makeMsgPush(index,"messageGameScore",updateMsg.Message)
+				a.makeMsgPush(index, "messageGameScore", updateMsg.Message)
 			case "messagePaymentSuccessful":
-				a.makeMsgPush(index,"messagePaymentSuccessful",updateMsg.Message)
+				a.makeMsgPush(index, "messagePaymentSuccessful", updateMsg.Message)
 			case "messagePaymentSuccessfulBot":
-				a.makeMsgPush(index,"messagePaymentSuccessfulBot",updateMsg.Message)
+				a.makeMsgPush(index, "messagePaymentSuccessfulBot", updateMsg.Message)
 			case "messageContactRegistered":
-				a.makeMsgPush(index,"messageContactRegistered",updateMsg.Message)
+				a.makeMsgPush(index, "messageContactRegistered", updateMsg.Message)
 			case "messageWebsiteConnected":
-				a.makeMsgPush(index,"messageWebsiteConnected",updateMsg.Message)
+				a.makeMsgPush(index, "messageWebsiteConnected", updateMsg.Message)
 			case "messagePassportDataSent":
-				a.makeMsgPush(index,"messagePassportDataSent",updateMsg.Message)
+				a.makeMsgPush(index, "messagePassportDataSent", updateMsg.Message)
 			case "messagePassportDataReceived":
-				a.makeMsgPush(index,"messagePassportDataReceived",updateMsg.Message)
+				a.makeMsgPush(index, "messagePassportDataReceived", updateMsg.Message)
 			case "messageProximityAlertTriggered":
-				a.makeMsgPush(index,"messageProximityAlertTriggered",updateMsg.Message)
+				a.makeMsgPush(index, "messageProximityAlertTriggered", updateMsg.Message)
 			case "messageUnsupported":
-				a.makeMsgPush(index,"messageUnsupported",updateMsg.Message)
+				a.makeMsgPush(index, "messageUnsupported", updateMsg.Message)
 			}
 		}
 	}()
 }
 
 // makeMsgPush 处理消息推送
-func (a *AppClient) makeMsgPush(index int,msgType string,message *tdlib.Message) {
+func (a *AppClient) makeMsgPush(index int, msgType string, message *tdlib.Message) {
 	switch message.Sender.GetMessageSenderEnum() {
 	case tdlib.MessageSenderUserType:
 		sender := message.Sender.(*tdlib.MessageSenderUser)
-		webhook.AddMsg(index, entity.MSG{
-			"msgType":msgType,
-			"msg":message,
-			"userID":sender.UserID,
-			"senderType":message.Sender.GetMessageSenderEnum(),
+		webhook.AddMsg(index, &entity.MSG{
+			"msgType":    msgType,
+			"msg":        message,
+			"userID":     sender.UserID,
+			"senderType": message.Sender.GetMessageSenderEnum(),
 		}, a.Cli)
 	case tdlib.MessageSenderChatType:
 		sender := message.Sender.(*tdlib.MessageSenderChat)
-		webhook.AddMsg(index, entity.MSG{
-			"msgType":msgType,
-			"msg":message,
-			"senderType":message.Sender.GetMessageSenderEnum(),
-			"senderChatID":sender.ChatID,
+		webhook.AddMsg(index, &entity.MSG{
+			"msgType":      msgType,
+			"msg":          message,
+			"senderType":   message.Sender.GetMessageSenderEnum(),
+			"senderChatID": sender.ChatID,
 		}, a.Cli)
 	}
 }
