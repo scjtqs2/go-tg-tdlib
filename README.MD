@@ -53,7 +53,7 @@ scjtqs/go-tg:latest
 	]
 }
 ```
-> cron 是定时配置，参考linux的crontab
+> cron 是定时配置，参考linux的crontab，5个参数为分钟即，6个参数为秒级
 > 
 > to_user_name 是对方的username
 > 

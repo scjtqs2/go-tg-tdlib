@@ -25,12 +25,16 @@ func Start(conf *config.JsonConfig) {
 		os.Exit(1)
 	}()
 	//定时任务开启
-	client.Cron = cron.New()
+	//client.Cron = cron.New()
+	// Seconds field, optional
+	client.Cron = cron.New(cron.WithParser(cron.NewParser(
+		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
+	)))
 	for k, v := range cronConf.Cron {
 		name := v.ToUserName
 		crontab := v.Cron
 		text := v.TextMsg
-		log.Infof("cron %d to user %s registed", (k + 1), name)
+		log.Infof("index %d cron %s  to user %s registed", (k + 1), v.Cron, name)
 		_, err := client.Cron.AddFunc(crontab, func() {
 			log.Infof("crontab to username %s start \n\n", name)
 			e := client.SendMessageByName(name, text)
@@ -63,8 +67,8 @@ func Start(conf *config.JsonConfig) {
 	if client.Conf.WebApi.WebApiStatus {
 		//开启 http api
 		web.HttpServer.
-			Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli,conf)
+			Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli, conf)
 	}
-	webhook.Start(conf,client.Cli)
+	webhook.Start(conf, client.Cli)
 	log.Infof("started ok \n")
 }

@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/Arman92/go-tdlib v0.0.0-20210325183359-3ea9cda96f39
+	github.com/gin-gonic/gin v1.6.0
 	github.com/guonaihong/gout v0.1.9
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
