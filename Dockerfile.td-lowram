@@ -1,4 +1,4 @@
-# 静态编译 tdlib 需要至少3.5GB RAM
+# 静态编译 tdlib 这个用于低内存机器的，但也至少需要1GB ram
 FROM alpine:3.13 as builder
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
@@ -23,10 +23,17 @@ RUN cd / \
     && cd td \
     && mkdir build \
     && cd build \
-    && cmake -DCMAKE_BUILD_TYPE=Release .. \
-#    && cmake --build . -- -j$(($(nproc) + 1)) \
-    && cmake --build . -- -j5 \
-    && make install
+#    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=../tdlib .. \
+    && cmake -DCMAKE_BUILD_TYPE=Release  .. \
+    && cmake --build . --target prepare_cross_compiling \
+    && cd .. \
+    && php SplitSource.php \
+    && cd build \
+    && cmake --build . --target install \
+    && cd .. \
+    && php SplitSource.php --undo \
+    && cd .. \
+    && ls -l td/tdlib
 
 FROM alpine:3.13
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
