@@ -74,5 +74,4 @@ func Start(conf *config.JsonConfig) {
 			Run(fmt.Sprintf("%s:%s", conf.WebApi.WebApiHost, conf.WebApi.WebApiPort), conf.WebApi.WebApiToken, client.Cli, conf)
 	}
 	webhook.Start(conf, client.Cli)
-	log.Infof("started ok \n")
 }

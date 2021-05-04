@@ -9,6 +9,8 @@ import (
 
 var cronPath = "cron.json"
 
+var ConfigPath = "config.json"
+
 type JsonConfig struct {
 	Phone               string     `json:"phone_number"`
 	Password            string     `json:"password"`
@@ -37,9 +39,9 @@ type Proxy struct {
 
 // webhook
 type WebHook struct {
-	WebHookStatus bool          `json:"status"`        //开关
-	WebHookUrl    string        `json:"http_post_url"` //post推送地址
-	WebHookSecret string        `json:"secret"`        //推送签名校验用的secret
+	WebHookStatus bool           `json:"status"`        //开关
+	WebHookUrl    string         `json:"http_post_url"` //post推送地址
+	WebHookSecret string         `json:"secret"`        //推送签名校验用的secret
 	WebHookFilter *WebHookFilter `json:"filter"`        //过滤仅这些用户推送
 }
 
@@ -209,8 +211,8 @@ func DefaultConfig() *JsonConfig {
 		err := json.Unmarshal([]byte(os.Getenv("WebHook")), &webhook)
 		if err == nil {
 			conf.WebHook = webhook
-		}else{
-			log.Errorf("parase webhook faild, WebHook=%s, err=%v",os.Getenv("WebHook"),err)
+		} else {
+			log.Errorf("parase webhook faild, WebHook=%s, err=%v", os.Getenv("WebHook"), err)
 		}
 	}
 

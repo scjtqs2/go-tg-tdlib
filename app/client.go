@@ -88,7 +88,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			if err != nil {
 				log.Errorf("Error sending phone number: %v", err)
 			}
-			conf.Save("config.json")
+			conf.Save(config.ConfigPath)
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
 			fmt.Print("Enter code: ")
 			var code string
@@ -106,7 +106,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			if err != nil {
 				log.Errorf("Error sending auth password: %v", err)
 			}
-			conf.Save("config.json")
+			conf.Save(config.ConfigPath)
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {
 			log.Info("Authorization Ready! Let's rock")
 			break
