@@ -89,3 +89,6 @@ scjtqs/go-tg:latest
 
 ## 使用docker-compose 方式运行
 [点击查看](doc/docker-compose.md)
+
+## for develop
+[如果我想自己修改代码，要如何编译当前代码](doc/dev.md)
