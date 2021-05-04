@@ -3,9 +3,9 @@ package app
 import (
 	"fmt"
 	"github.com/robfig/cron/v3"
+	"github.com/scjtqs/go-tg/app/web"
+	"github.com/scjtqs/go-tg/app/webhook"
 	"github.com/scjtqs/go-tg/config"
-	"github.com/scjtqs/go-tg/web"
-	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
@@ -36,7 +36,7 @@ func Start(conf *config.JsonConfig) {
 		text := v.TextMsg
 		log.Infof("index %d cron %s  to user %s registed", (k + 1), v.Cron, name)
 		_, err := client.Cron.AddFunc(crontab, func() {
-			log.Infof("crontab to username %s start \n\n", name)
+			log.Infof("crontab to username %s start", name)
 			e := client.SendMessageByName(name, text)
 			if e != nil {
 				log.Errorf("send message to username error err:%v \n\n", name, e)
@@ -48,22 +48,26 @@ func Start(conf *config.JsonConfig) {
 	}
 
 	// filter msg
-	for k, v := range conf.WebHook {
-		client.FilterMsg(k, v)
+	if conf.WebHook != nil {
+		for k, v := range conf.WebHook {
+			client.FilterMsg(k, v)
+		}
 	}
 
 	client.Cron.Start()
-	// rawUpdates gets all updates comming from tdlib
-	//rawUpdates := client.Cli.GetRawUpdatesChannel(100)
-	//client.Cli.GetRawUpdatesChannel(100)
-	//for update := range rawUpdates {
-	//	// Show all updates
-	//	//log.Debug(update.Data)
-	//	//log.Debug("\n")
-	//	if update.Data!=nil{
-	//
-	//	}
-	//}
+	/**
+	rawUpdates gets all updates comming from tdlib
+	rawUpdates := client.Cli.GetRawUpdatesChannel(100)
+	client.Cli.GetRawUpdatesChannel(100)
+	for update := range rawUpdates {
+		// Show all updates
+		//log.Debug(update.Data)
+		//log.Debug("\n")
+		if update.Data!=nil{
+
+		}
+	}
+	*/
 	if client.Conf.WebApi.WebApiStatus {
 		//开启 http api
 		web.HttpServer.

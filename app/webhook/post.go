@@ -6,8 +6,8 @@ import (
 	"encoding/hex"
 	"github.com/Arman92/go-tdlib"
 	"github.com/guonaihong/gout"
+	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/config"
-	"github.com/scjtqs/go-tg/entity"
 	log "github.com/sirupsen/logrus"
 	"time"
 )

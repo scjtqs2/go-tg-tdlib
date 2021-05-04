@@ -80,31 +80,31 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	for {
 		currentState, _ := client.Authorize()
 		if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPhoneNumberType {
-			log.Print("Enter phone: ")
+			fmt.Print("Enter phone: ")
 			var number string
 			fmt.Scanln(&number)
 			conf.Phone = number
 			_, err := client.SendPhoneNumber(number)
 			if err != nil {
-				log.Infof("Error sending phone number: %v", err)
+				log.Errorf("Error sending phone number: %v", err)
 			}
 			conf.Save("config.json")
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitCodeType {
-			log.Print("Enter code: ")
+			fmt.Print("Enter code: ")
 			var code string
 			fmt.Scanln(&code)
 			_, err := client.SendAuthCode(code)
 			if err != nil {
-				log.Infof("Error sending auth code : %v ", err)
+				log.Errorf("Error sending auth code : %v ", err)
 			}
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateWaitPasswordType {
-			log.Print("Enter Password: ")
+			fmt.Print("Enter Password: ")
 			var password string
 			fmt.Scanln(&password)
 			conf.Password = password
 			_, err := client.SendAuthPassword(password)
 			if err != nil {
-				log.Infof("Error sending auth password: %v", err)
+				log.Errorf("Error sending auth password: %v", err)
 			}
 			conf.Save("config.json")
 		} else if currentState.GetAuthorizationStateEnum() == tdlib.AuthorizationStateReadyType {

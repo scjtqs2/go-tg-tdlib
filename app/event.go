@@ -2,10 +2,10 @@ package app
 
 import (
 	"github.com/Arman92/go-tdlib"
+	"github.com/scjtqs/go-tg/app/entity"
+	"github.com/scjtqs/go-tg/app/webhook"
 	"github.com/scjtqs/go-tg/config"
-	"github.com/scjtqs/go-tg/entity"
 	"github.com/scjtqs/go-tg/utils"
-	"github.com/scjtqs/go-tg/webhook"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
@@ -15,7 +15,7 @@ func (a *AppClient) FilterMsg(index int, conf *config.WebHook) {
 		return
 	}
 	var chatIds []string
-	if conf.WebHookFilter.FilterStatus {
+	if conf.WebHookFilter != nil && conf.WebHookFilter.FilterStatus {
 		for _, v := range conf.WebHookFilter.FilterNames {
 			id, err := a.Cli.SearchPublicChat(v)
 			if err != nil {
