@@ -4,7 +4,7 @@ COPY ./sources.list /etc/apt/sources.list
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git cmake build-essential gperf libssl-dev zlib1g-dev
+    apt-get install -y git cmake build-essential gperf libssl-dev zlib1g-dev clang-6.0 libc++-dev libc++abi-dev
 
 
 RUN cd / \
@@ -17,11 +17,12 @@ RUN cd / \
     && cmake --build . -- -j5 \
     && make install
 
+
 FROM debian:buster-slim
 #RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 COPY --from=builder /usr/local/include/td /usr/local/include/td
 COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
-COPY --from=builder /usr/lib/libssl.a /usr/local/lib/libssl.a
-COPY --from=builder /usr/lib/libcrypto.a /usr/local/lib/libcrypto.a
-COPY --from=builder /lib/libz.a /usr/local/lib/libz.a
+#COPY --from=builder /usr/lib/libssl.a /usr/local/lib/libssl.a
+#COPY --from=builder /usr/lib/libcrypto.a /usr/local/lib/libcrypto.a
+#COPY --from=builder /lib/libz.a /usr/local/lib/libz.a
 

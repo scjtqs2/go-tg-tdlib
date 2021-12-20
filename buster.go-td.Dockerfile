@@ -7,13 +7,13 @@ ARG RELEASE_VERSION="1.0.0"
 
 COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libtd* /usr/local/lib/
-COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
+#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
+#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
+#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git cmake build-essential libc++-12-dev libc++abi-12-dev \
+    apt-get install -y git cmake build-essential zlib1g-dev libssl-dev gperf php cmake clang-6.0 libc++-dev libc++abi-dev \
     && rm -rf /var/lib/apt/lists/ \
     && mkdir /go-tdlib
 
