@@ -2,8 +2,8 @@ package app
 
 import (
 	"fmt"
-	"github.com/Arman92/go-tdlib/client"
-	"github.com/Arman92/go-tdlib/tdlib"
+	"github.com/Arman92/go-tdlib/v2/client"
+	"github.com/Arman92/go-tdlib/v2/tdlib"
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"

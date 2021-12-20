@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/Arman92/go-tdlib/client"
+	"github.com/Arman92/go-tdlib/v2/client"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/scjtqs/go-tg/app"
 	"github.com/scjtqs/go-tg/config"

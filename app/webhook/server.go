@@ -1,7 +1,7 @@
 package webhook
 
 import (
-	"github.com/Arman92/go-tdlib/client"
+	"github.com/Arman92/go-tdlib/v2/client"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"

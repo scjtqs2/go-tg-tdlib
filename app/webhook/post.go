@@ -4,7 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
-	"github.com/Arman92/go-tdlib/client"
+	"github.com/Arman92/go-tdlib/v2/client"
 	"github.com/guonaihong/gout"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/config"

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/Arman92/go-tdlib/tdlib"
+	"github.com/Arman92/go-tdlib/v2/tdlib"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/app/webhook"
 	"github.com/scjtqs/go-tg/config"
