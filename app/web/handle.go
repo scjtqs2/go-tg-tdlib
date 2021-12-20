@@ -4,7 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/client"
+	"github.com/Arman92/go-tdlib/tdlib"
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/utils"
@@ -255,7 +256,8 @@ func (s *httpServer) getChatList(c *gin.Context) {
 	var chatList = tdlib.NewChatListMain()
 
 	// get chats (ids) from tdlib
-	chats, err := s.bot.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
+	a := tdlib.JSONInt64(offsetOrder)
+	chats, err := s.bot.GetChats(chatList, &a,
 		offsetChatID, int32(lid))
 	if err != nil {
 		log.Error(err)
@@ -266,7 +268,7 @@ func (s *httpServer) getChatList(c *gin.Context) {
 }
 
 // see https://stackoverflow.com/questions/37782348/how-to-use-getchats-in-tdlib
-func getChatList(client *tdlib.Client, limit int) error {
+func getChatList(client *client.Client, limit int) error {
 
 	if !haveFullChatList && limit > len(allChats) {
 		offsetOrder := int64(math.MaxInt64)
@@ -286,7 +288,8 @@ func getChatList(client *tdlib.Client, limit int) error {
 		}
 
 		// get chats (ids) from tdlib
-		chats, err := client.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
+		a := tdlib.JSONInt64(offsetOrder)
+		chats, err := client.GetChats(chatList, &a,
 			offsetChatID, int32(limit-len(allChats)))
 		if err != nil {
 			return err

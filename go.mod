@@ -3,8 +3,8 @@ module github.com/scjtqs/go-tg
 go 1.16
 
 require (
-	github.com/Arman92/go-tdlib v0.0.0-20210325183359-3ea9cda96f39
-	github.com/gin-gonic/gin v1.6.0
+	github.com/Arman92/go-tdlib v1.0.1-0.20210605080123-2454be49c341
+	github.com/gin-gonic/gin v1.7.2-0.20211215152723-fb5f04541787
 	github.com/guonaihong/gout v0.1.9
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
@@ -18,3 +18,4 @@ require (
 //replace (
 //	github.com/Arman92/go-tdlib master => /Users/apple/Workspace/git/go-tdlib
 //)
+replace github.com/Arman92/go-tdlib v1.0.1-0.20210605080123-2454be49c341 => github.com/Arman92/go-tdlib/v2 v2.0.0-20211210144712-d8b8869d8e49

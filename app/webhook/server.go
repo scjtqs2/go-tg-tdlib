@@ -1,7 +1,7 @@
 package webhook
 
 import (
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/client"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
@@ -9,7 +9,7 @@ import (
 
 var MsgCh []chan *entity.MSG
 
-func Start(conf *config.JsonConfig, bot *tdlib.Client) {
+func Start(conf *config.JsonConfig, bot *client.Client) {
 	//wg := sync.WaitGroup{}
 	//wg.Add(1)
 	MsgCh = make([]chan *entity.MSG, len(conf.WebHook))
@@ -33,7 +33,7 @@ func Start(conf *config.JsonConfig, bot *tdlib.Client) {
 
 }
 
-func AddMsg(k int, msg *entity.MSG, client *tdlib.Client) {
+func AddMsg(k int, msg *entity.MSG, client *client.Client) {
 	log.Debugf("msg index:%d added,%+v", k, msg)
 	//HttpClient.AddBot(client)
 	MsgCh[k] <- msg
