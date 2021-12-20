@@ -1,54 +1,50 @@
 # golang编译环境
-FROM golang:1.16-alpine3.13 as gobuilder
-
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+FROM golang:1.16-buster as gobuilder
+COPY ./sources.list /etc/apt/sources.list
 
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 ARG RELEASE_VERSION="1.0.0"
 
-COPY --from=scjtqs/tdlib:master /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:master /usr/local/lib/libtd* /usr/local/lib/
-COPY --from=scjtqs/tdlib:master /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-COPY --from=scjtqs/tdlib:master /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-COPY --from=scjtqs/tdlib:master /usr/local/lib/libz.a /usr/local/lib/libz.a
+COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
+COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
+COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
 
-RUN apk update && apk add --no-cache git gcc libc-dev g++ make cmake openssl-dev zlib-dev ca-certificates tzdata \
-    alpine-sdk linux-headers  gperf php php-ctype \
-    openssl-libs-static zlib-static \
-    zlib openssl \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git cmake build-essential libc++-12-dev libc++abi-12-dev \
+    && rm -rf /var/lib/apt/lists/ \
     && mkdir /go-tdlib
-#RUN git clone http://gitlab.scjtqs.com:8000/scjtqs/go-tg-tdlib.git  --depth 1 /go-tdlib/src/
-#RUN git clone https://github.com/scjtqs/go-tg.git  --depth 1 /go-tdlib/src/
+
 COPY . /go-tdlib/src/
 
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
-#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
     && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
     && cp go-tg /go-tg
-#    && rm -rf /go-tdlib
 
+FROM debian:buster-slim
 
-##ENTRYPOINT ["/go-tdlib/go-tg"]
-##CMD ["/go-tdlib/go-tg"]
-#
-FROM alpine:3.13
-
+COPY ./sources.list /etc/apt/sources.list
 #COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
 #COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
-#COPY --from=gobuilder /go-tdlib  /go-tdlib
 COPY --from=gobuilder /go-tg  /go-tg
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
-#RUN apk update && apk add --no-cache libc-dev openssl-dev zlib-dev && rm -rf /var/cache/apk/*
-# 设置时区为上海
-RUN apk update && apk add --no-cache tzdata  \
-    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \
-    && apk del tzdata   \
-    && rm -rf /var/cache/apk/*
+RUN apt-get update && apt-get install -y locales tzdata && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
+ENV TZ=Asia/Shanghai \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+
 ## IS_DOCKER true表示每次启动容器，都会动态生成config.json并覆盖现有数据
 ENV IS_DOCKER="true"
 ENV DEBUG="false"

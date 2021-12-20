@@ -1,5 +1,5 @@
-github.com/Arman92/go-tdlib v0.0.0-20210325183359-3ea9cda96f39 h1:qkmyz9FklTN4UiclW9gI5yFK02TvHvbmnRI4JTTINH8=
-github.com/Arman92/go-tdlib v0.0.0-20210325183359-3ea9cda96f39/go.mod h1:ZzkRfuaFj8etIYMj/ECtXtgfz72RE6U+dos27b3XIwk=
+github.com/Arman92/go-tdlib v1.0.1-0.20210605080123-2454be49c341 h1:qhClIsd0Uz5WuwRTlAjuK+eUi/m+9RSeaCGl/F3gREQ=
+github.com/Arman92/go-tdlib v1.0.1-0.20210605080123-2454be49c341/go.mod h1:gz/NLfLyXSF3LufhmK4a+xcrlIvAUR67zxOWv0JxvsU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
