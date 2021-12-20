@@ -4,7 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/v2/client"
 	"github.com/guonaihong/gout"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/config"
@@ -15,14 +15,14 @@ import (
 var HttpClient *httpClient
 
 type httpClient struct {
-	Bot     *tdlib.Client
+	Bot     *client.Client
 	Secret  string
 	Addr    string
 	Timeout int32
 	Conf    *config.JsonConfig
 }
 
-func NewHttpClient(config *config.JsonConfig, addr string, secret string, timeout int32, bot *tdlib.Client) *httpClient {
+func NewHttpClient(config *config.JsonConfig, addr string, secret string, timeout int32, bot *client.Client) *httpClient {
 	HttpClient = &httpClient{
 		Secret:  secret,
 		Addr:    addr,
@@ -54,7 +54,7 @@ func (c *httpClient) PushEvent(m *entity.MSG) {
 	}
 }
 
-func (c *httpClient) AddBot(bot *tdlib.Client) {
+func (c *httpClient) AddBot(bot *client.Client) {
 	if c.Bot != nil {
 		return
 	}

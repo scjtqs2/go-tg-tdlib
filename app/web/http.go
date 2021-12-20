@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/v2/client"
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
@@ -14,11 +14,11 @@ var HttpServer = &httpServer{}
 
 type httpServer struct {
 	engine *gin.Engine
-	bot    *tdlib.Client
+	bot    *client.Client
 	conf   *config.JsonConfig
 }
 
-func (s *httpServer) Run(addr, authToken string, bot *tdlib.Client,conf *config.JsonConfig) {
+func (s *httpServer) Run(addr, authToken string, bot *client.Client,conf *config.JsonConfig) {
 	gin.SetMode(gin.ReleaseMode)
 	s.engine = gin.New()
 	s.bot = bot

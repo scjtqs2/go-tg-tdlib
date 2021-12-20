@@ -4,14 +4,14 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/v2/client"
+	"github.com/Arman92/go-tdlib/v2/tdlib"
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/utils"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
-	"math"
 	"path"
 	"strconv"
 	"strings"
@@ -181,13 +181,13 @@ func (s *httpServer) GetUserByUserId(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid userID"))
 		return
 	}
-	uid, err := strconv.ParseInt(userID, 10, 32)
+	uid, err := strconv.ParseInt(userID, 10, 64)
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, "invalid userID"))
 		return
 	}
-	user, err := s.bot.GetUser(int32(uid))
+	user, err := s.bot.GetUser(uid)
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
@@ -246,17 +246,10 @@ func (s *httpServer) getChatList(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid limit"))
 		return
 	}
-	offset := getParam(c, "offset")
-	offsetOrder, err := strconv.ParseInt(offset, 10, 64)
-	if err != nil {
-		offsetOrder = int64(0)
-	}
-	offsetChatID := int64(0)
 	var chatList = tdlib.NewChatListMain()
 
 	// get chats (ids) from tdlib
-	chats, err := s.bot.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
-		offsetChatID, int32(lid))
+	chats, err := s.bot.GetChats(chatList, int32(lid))
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, err.Error()))
@@ -266,28 +259,13 @@ func (s *httpServer) getChatList(c *gin.Context) {
 }
 
 // see https://stackoverflow.com/questions/37782348/how-to-use-getchats-in-tdlib
-func getChatList(client *tdlib.Client, limit int) error {
+func getChatList(client *client.Client, limit int) error {
 
 	if !haveFullChatList && limit > len(allChats) {
-		offsetOrder := int64(math.MaxInt64)
-		offsetChatID := int64(0)
 		var chatList = tdlib.NewChatListMain()
-		var lastChat *tdlib.Chat
-
-		if len(allChats) > 0 {
-			lastChat = allChats[len(allChats)-1]
-			for i := 0; i < len(lastChat.Positions); i++ {
-				//Find the main chat list
-				if lastChat.Positions[i].List.GetChatListEnum() == tdlib.ChatListMainType {
-					offsetOrder = int64(lastChat.Positions[i].Order)
-				}
-			}
-			offsetChatID = lastChat.ID
-		}
 
 		// get chats (ids) from tdlib
-		chats, err := client.GetChats(chatList, tdlib.JSONInt64(offsetOrder),
-			offsetChatID, int32(limit-len(allChats)))
+		chats, err := client.GetChats(chatList, int32(limit-len(allChats)))
 		if err != nil {
 			return err
 		}

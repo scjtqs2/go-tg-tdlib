@@ -2,7 +2,8 @@ package app
 
 import (
 	"fmt"
-	"github.com/Arman92/go-tdlib"
+	"github.com/Arman92/go-tdlib/v2/client"
+	"github.com/Arman92/go-tdlib/v2/tdlib"
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
@@ -10,7 +11,7 @@ import (
 )
 
 type AppClient struct {
-	Cli  *tdlib.Client
+	Cli  *client.Client
 	Conf *config.JsonConfig
 	Cron *cron.Cron
 }
@@ -18,7 +19,7 @@ type AppClient struct {
 // NewClient 初始化 bot方法
 func NewClient(conf *config.JsonConfig) *AppClient {
 	// Create new instance of client
-	client := tdlib.NewClient(tdlib.Config{
+	client := client.NewClient(client.Config{
 		APIID:                  conf.AppID,
 		APIHash:                conf.AppHash,
 		SystemLanguageCode:     "en",
