@@ -1,10 +1,10 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM buildpack-deps:buster-scm as builder
+FROM debian:bullseye-slim as builder
 COPY ./sources.list /etc/apt/sources.list
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git cmake build-essential gperf libssl-dev zlib1g-dev clang-6.0 libc++-dev libc++abi-dev
+    apt-get install -y git cmake build-essential gperf libssl-dev zlib1g-dev  libc++-dev libc++abi-dev
 
 
 RUN cd / \
@@ -18,7 +18,7 @@ RUN cd / \
     && make install
 
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 #RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 COPY --from=builder /usr/local/include/td /usr/local/include/td
 COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
