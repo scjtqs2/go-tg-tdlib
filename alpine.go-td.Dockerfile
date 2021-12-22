@@ -20,7 +20,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 
-FROM alpine:3.13
+FROM alpine:3.15
 
 COPY --from=gobuilder /go-tg  /go-tg
 #RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
