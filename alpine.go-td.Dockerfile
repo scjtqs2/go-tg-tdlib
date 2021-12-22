@@ -6,9 +6,9 @@ ARG RELEASE_VERSION="1.0.0"
 
 COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libtd* /usr/local/lib/
-COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libz.a /usr/local/lib/libz.a
+#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libssl.a /usr/local/lib/libssl.a
+#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
+#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libz.a /usr/local/lib/libz.a
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
