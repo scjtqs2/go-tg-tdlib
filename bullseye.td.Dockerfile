@@ -1,14 +1,14 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM debian:bullseye-slim as builder
+FROM buildpack-deps:bullseye-scm as builder
 COPY ./sources.list /etc/apt/sources.list
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git cmake build-essential gperf libssl-dev zlib1g-dev  libc++-dev libc++abi-dev
+#    apt-get upgrade -y && \
+    apt-get install -fy git cmake build-essential gperf libssl-dev zlib1g-dev  libc++-dev libc++abi-dev
 
-
+# v1.7.10
 RUN cd / \
-   && git clone https://ghproxy.com/https://github.com/tdlib/td.git --depth 1 \
+   && git clone https://ghproxy.com/https://github.com/scjtqs2/td --depth 1 \
     && cd td \
     && mkdir build \
     && cd build \

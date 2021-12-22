@@ -18,5 +18,4 @@ require (
 //replace (
 //	github.com/Arman92/go-tdlib master => /Users/apple/Workspace/git/go-tdlib
 //)
-//replace github.com/Arman92/go-tdlib v1.0.1-0.20210605080123-2454be49c341 => github.com/Arman92/go-tdlib/v2 v2.0.0-20211210144712-d8b8869d8e49
-replace github.com/Arman92/go-tdlib/v2 v2.0.1-0.20210605080123-2454be49c341 => github.com/ffenix113/go-tdlib/v2 v2.0.0-20211204191913-dbb38e1deb80
+replace github.com/Arman92/go-tdlib/v2 v2.0.1-0.20210605080123-2454be49c341 => github.com/scjtqs2/go-tdlib/v2 v2.0.0-20211222034113-c452c6ae80e7
