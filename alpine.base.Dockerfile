@@ -6,7 +6,7 @@ RUN apk update \
     && apk add --no-cache \
     alpine-sdk \
     linux-headers \
-    zlib-dev zlib-static libressl-dev \
+    zlib-dev zlib-static libressl-dev libssl1.1 openssl-dev \
     gperf \
     php php-ctype   \
     ca-certificates \
