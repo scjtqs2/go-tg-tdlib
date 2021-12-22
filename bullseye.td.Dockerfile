@@ -16,7 +16,7 @@ RUN cd / \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release .. \
 #    && cmake --build . -- -j$(($(nproc) + 1)) \
-    && cmake --build . -- -j5 \
+    && cmake --build . -- -j2 \
     && make install
 
 

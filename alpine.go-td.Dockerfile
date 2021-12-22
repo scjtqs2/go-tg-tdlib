@@ -2,13 +2,10 @@
 FROM scjtqs/tdlib:alpine-base AS gobuilder
 
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.7.10"
 
 COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libtd* /usr/local/lib/
-#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-#COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libz.a /usr/local/lib/libz.a
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
@@ -18,7 +15,8 @@ WORKDIR /go-tdlib/src
 RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
-    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
+#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
+    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltddb -ltdsqlite -ltdnet -ltdutils -ldl -lm -lssl -lcrypto -lstdc++ -lz' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 

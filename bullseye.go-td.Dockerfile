@@ -20,7 +20,7 @@
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.7.10"
 
 COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/lib/libtd* /usr/local/lib/
@@ -38,8 +38,6 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
 FROM debian:bullseye-slim
 
 COPY ./sources.list /etc/apt/sources.list
-#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/include/td /usr/local/include/td
-#COPY --from=scjtqs/tdlib:1.7.0 /usr/local/lib/libtd* /usr/local/lib/
 COPY --from=gobuilder /go-tg  /go-tg
 
 RUN apt-get update && apt-get install -y locales tzdata && rm -rf /var/lib/apt/lists/* \
