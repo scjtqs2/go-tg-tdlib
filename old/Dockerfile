@@ -32,7 +32,7 @@ COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
 
 RUN apk update && apk add --no-cache git gcc libc-dev g++ make openssl-dev && rm -rf /var/cache/apk/*
 
-COPY . /go-tdlib
+COPY .. /go-tdlib
 WORKDIR /go-tdlib
 RUN go env -w "GOPROXY=http://goproxy.cn,direct" \
     && go mod tidy \

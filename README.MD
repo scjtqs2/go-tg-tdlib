@@ -18,7 +18,7 @@ docker run -it --rm --name tg_cli \
 -e ProxyPort="7890" \
 -e ProxyUser="" \
 -e ProxyPasswd="" \
-scjtqs/go-tg:latest
+scjtqs/go-tg:1.7.10
 ```
 > AppID 可不填
 > 
@@ -81,7 +81,7 @@ docker run  -D --restart=always --name tg_bot \
 -e ProxyPort="7890" \
 -e ProxyUser="" \
 -e ProxyPasswd="" \
-scjtqs/go-tg:latest
+scjtqs/go-tg:1.7.10
 ```
 
 ## api 功能

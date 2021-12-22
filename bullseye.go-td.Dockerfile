@@ -1,21 +1,30 @@
-# golang编译环境
-FROM golang:1.16-bullseye as gobuilder
-COPY ./sources.list /etc/apt/sources.list
+## golang编译环境
+#FROM golang:1.17-bullseye as gobuilder
+#COPY ./sources.list /etc/apt/sources.list
+#
+#ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
+#ARG RELEASE_VERSION="1.0.0"
+#
+#COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/include/td /usr/local/include/td
+#COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/lib/libtd* /usr/local/lib/
+##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
+##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
+##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
+#
+#RUN apt-get update && \
+#    apt-get upgrade -y && \
+#    apt-get install -y git cmake build-essential zlib1g-dev libssl-dev gperf php cmake clang libc++-dev libc++abi-dev \
+#    && rm -rf /var/lib/apt/lists/ \
+#    && mkdir /go-tdlib
 
+# 使用已安装好编译环境的镜像，节省时间。
+FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 ARG RELEASE_VERSION="1.0.0"
 
 COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/lib/libtd* /usr/local/lib/
-#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-#COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
-
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git cmake build-essential zlib1g-dev libssl-dev gperf php cmake clang libc++-dev libc++abi-dev \
-    && rm -rf /var/lib/apt/lists/ \
-    && mkdir /go-tdlib
+RUN mkdir /go-tdlib
 
 COPY . /go-tdlib/src/
 

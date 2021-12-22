@@ -1,6 +1,6 @@
 module github.com/scjtqs/go-tg
 
-go 1.16
+go 1.17
 
 require (
 	github.com/Arman92/go-tdlib/v2 v2.0.1-0.20210605080123-2454be49c341
