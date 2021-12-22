@@ -74,4 +74,4 @@ jobs:
 #        run: docker push $IMAGE_NAME
         
       - name: buildx
-        run: ./buildtg-alpine.sh
+        run: ./buildtg-bullseye.sh
