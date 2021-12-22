@@ -1,5 +1,5 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM buildpack-deps:bullseye-scm as builder
+FROM debian:bullseye-slim as builder
 COPY ./sources.list /etc/apt/sources.list
 
 RUN apt-get update && \

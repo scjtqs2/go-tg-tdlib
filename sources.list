@@ -1,8 +1,11 @@
-deb http://mirrors.aliyun.com/debian/ bullseye main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ bullseye main non-free contrib
-deb http://mirrors.aliyun.com/debian-security/ bullseye-security main
-deb-src http://mirrors.aliyun.com/debian-security/ bullseye-security main
-deb http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib
-deb http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib
+# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free
+# deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free
+# deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free
+
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-backports main contrib non-free
+# deb-src http://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-backports main contrib non-free
+
+deb http://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free
+# deb-src http://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free
