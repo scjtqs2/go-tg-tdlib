@@ -1,5 +1,5 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM scjtqs/tdlib:alpine-base
+FROM scjtqs/tdlib:alpine-base AS builder
 
 RUN cd / \
    && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
