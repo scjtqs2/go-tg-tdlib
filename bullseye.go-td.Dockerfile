@@ -32,7 +32,9 @@ WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
-    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
+    && apt-get install linux-libc-dev \
+#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
+    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdapi -ltdactor -ltddb -ltdsqlite -ltdnet -ltdutils -lc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 
 FROM debian:bullseye-slim
