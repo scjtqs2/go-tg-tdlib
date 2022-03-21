@@ -34,7 +34,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
     && apt-get install linux-libc-dev \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
-    && CGO_ENABLED=1 go build -ldflags="'-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltdapi -ltddb -ltdsqlite -ltdnet -ltdutils -lstdc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+    && CGO_ENABLED=1 go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 
 FROM debian:bullseye-slim
@@ -42,7 +42,7 @@ FROM debian:bullseye-slim
 COPY ./sources.list /etc/apt/sources.list
 COPY --from=gobuilder /go-tg  /go-tg
 
-RUN apt-get update && apt-get install -y locales tzdata && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y locales tzdata libssl1.1 libstdc++6 && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 ENV TZ=Asia/Shanghai \

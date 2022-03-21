@@ -28,7 +28,7 @@ COPY --from=gobuilder /go-tg  /go-tg
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata libssl1.1 libstdc++ \
+RUN apk update && apk add --no-cache tzdata libssl1.1 libstdc++6 \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \
