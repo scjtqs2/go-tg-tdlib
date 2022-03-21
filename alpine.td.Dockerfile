@@ -9,11 +9,13 @@ RUN cd / \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
 #    && cmake --build . -- -j$(($(nproc) + 1)) \
-    && cmake --build .  --target prepare_cross_compiling -j5 \
+#    && cmake --build .  --target prepare_cross_compiling -j5 \
+    && cmake --build .  --target prepare_cross_compiling \
     && cd .. \
     && php SplitSource.php \
     && cd build \
-    && cmake --build . --target install -j4 \
+#    && cmake --build . --target install -j4 \
+    && cmake --build . --target install \
     && cd .. \
     && php SplitSource.php --undo
 
