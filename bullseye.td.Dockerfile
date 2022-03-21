@@ -14,10 +14,15 @@ RUN cd / \
     && cd td \
     && mkdir build \
     && cd build \
-    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
 #    && cmake --build . -- -j$(($(nproc) + 1)) \
-    && cmake --build . -- -j2 \
-    && make install
+    && cmake --build . --target prepare_cross_compiling \
+    && cd .. \
+    && php SplitSource.php \
+    && cd build \
+    && cmake --build . --target install \
+    && cd .. \
+    && php SplitSource.php --undo
 
 
 FROM debian:bullseye-slim
