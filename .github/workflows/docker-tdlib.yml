@@ -1,28 +1,12 @@
 name: Docker
 
 on:
-  push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-
-  # Run tests for any PRs.
-  pull_request:
-       branches:
-        - master
-  
-  schedule:
-    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       name:
         description: '备注'
         required: true
-        default: 'Mona the Octocat'
+        default: '生成tdlib基础包'
 
   check_suite:
     types: [rerequested, completed]
@@ -67,14 +51,14 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login  -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Log into aliyun repo
-        run: echo "${{ secrets.DOCKER_PASSWORD2 }}" | docker login  -u ${{ secrets.DOCKER_USERNAME2 }} registry.cn-hangzhou.aliyuncs.com --password-stdin
+#      - name: Log into aliyun repo
+#        run: echo "${{ secrets.DOCKER_PASSWORD2 }}" | docker login  -u ${{ secrets.DOCKER_USERNAME2 }} registry.cn-hangzhou.aliyuncs.com --password-stdin
 
 #      - name: Push image
 #        run: docker push $IMAGE_NAME
         
       - name: buildx-bullseye
-        run: ./buildtg-bullseye.sh
+        run: ./buildForTdlib-bullseye.sh
 
       - name: buildx-alpine
-        run: ./buildtg-alpine.sh
+        run: ./buildForTdlib-alpine.sh

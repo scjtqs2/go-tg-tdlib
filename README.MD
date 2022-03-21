@@ -81,7 +81,7 @@ docker run  -D --restart=always --name tg_bot \
 -e ProxyPort="7890" \
 -e ProxyUser="" \
 -e ProxyPasswd="" \
-scjtqs/go-tg:1.7.10
+scjtqs/go-tg:1.8.0
 ```
 
 ## api 功能

@@ -5,7 +5,7 @@
 version: "2.2"
 services:
   tg_bot:
-    image: scjtqs/go-tg:1.7.10
+    image: scjtqs/go-tg:1.8.0
     restart: always
     stdin_open: true
     tty: true

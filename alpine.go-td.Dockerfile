@@ -13,6 +13,7 @@ COPY . /go-tdlib/src/
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go env -w GOPROXY=https://goproxy.cn,direct \
+    && rm -rf /usr/local/lib/libtdjson.so* \
     && go mod tidy \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
@@ -27,7 +28,7 @@ COPY --from=gobuilder /go-tg  /go-tg
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata  \
+RUN apk update && apk add --no-cache tzdata libssl1.1 libstdc++ \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \
