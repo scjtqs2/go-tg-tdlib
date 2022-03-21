@@ -1,4 +1,4 @@
-name: Docker
+name: Docker-latest
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       name:
         description: '备注'
         required: true
-        default: '生成tdlib基础包'
+        default: '生成latest标签'
 
   check_suite:
     types: [rerequested, completed]
