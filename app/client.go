@@ -19,6 +19,45 @@ type AppClient struct {
 func NewClient(conf *config.JsonConfig) *AppClient {
 	// client authorizer
 	authorizer := client.ClientAuthorizer()
+	// go client.CliInteractor(authorizer)
+	go func() {
+		for {
+			select {
+			case currentState, ok := <-authorizer.State:
+				if !ok {
+					// log.Errorf("get state not readdy")
+					return
+				}
+				switch currentState.AuthorizationStateType() {
+				case client.TypeAuthorizationStateWaitPhoneNumber:
+					fmt.Print("Enter phone number: ")
+					var phoneNumber string
+					fmt.Scanln(&phoneNumber)
+
+					authorizer.PhoneNumber <- phoneNumber
+
+				case client.TypeAuthorizationStateWaitCode:
+					var code string
+
+					fmt.Print("Enter code: ")
+					fmt.Scanln(&code)
+
+					authorizer.Code <- code
+
+				case client.TypeAuthorizationStateWaitPassword:
+					fmt.Print("Enter password: ")
+					var password string
+					fmt.Scanln(&password)
+
+					authorizer.Password <- password
+
+				case client.TypeAuthorizationStateReady:
+					log.Info("Authorization Ready! Let's rock")
+					return
+				}
+			}
+		}
+	}()
 	appid, _ := strconv.ParseInt(conf.AppID, 10, 32)
 	authorizer.TdlibParameters <- &client.TdlibParameters{
 		UseTestDc:              false,
@@ -40,12 +79,12 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 
 	// You can set user-name and password to empty of don't need it
 	// Socks5
-	//client.AddProxy("pi.scjtqs.com", 1234, true, tdlib.NewProxyTypeSocks5("user-name", "password"))
-	//client.AddProxy("pi.scjtqs.com", 10808, true, tdlib.NewProxyTypeSocks5("", ""))
+	// client.AddProxy("pi.scjtqs.com", 1234, true, tdlib.NewProxyTypeSocks5("user-name", "password"))
+	// client.AddProxy("pi.scjtqs.com", 10808, true, tdlib.NewProxyTypeSocks5("", ""))
 	// HTTP - HTTPS proxy
-	//client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeHttp("user-name", "password", false))
+	// client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeHttp("user-name", "password", false))
 	// MtProto Proxy
-	//client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeMtproto("MTPROTO-SECRET"))
+	// client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeMtproto("MTPROTO-SECRET"))
 	var proxy client.Option
 	if conf.Proxy.ProxyStatus {
 		switch conf.Proxy.ProxyType {
@@ -112,37 +151,20 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	logVerbosity := client.WithLogVerbosity(&client.SetLogVerbosityLevelRequest{
 		NewVerbosityLevel: 0,
 	})
-	tdlibClient, err := client.NewClient(authorizer, logVerbosity, proxy)
+	var (
+		tdlibClient *client.Client
+		err         error
+	)
+	switch proxy {
+	case nil:
+		tdlibClient, err = client.NewClient(authorizer, logVerbosity)
+	default:
+		tdlibClient, err = client.NewClient(authorizer, logVerbosity, proxy)
+	}
 	if err != nil {
 		log.Fatalf("NewClient error: %s", err)
 	}
-	//go client.CliInteractor(authorizer)
-	for {
-		currentState, ok := <-authorizer.State
-		if !ok {
-			log.Errorf("get state not readdy")
-			continue
-		}
-		if currentState.AuthorizationStateType() == client.TypeAuthorizationStateWaitPhoneNumber {
-			fmt.Print("Enter phone: ")
-			var number string
-			fmt.Scanln(&number)
-			authorizer.PhoneNumber <- number
-		} else if currentState.AuthorizationStateType() == client.TypeAuthorizationStateWaitCode {
-			fmt.Print("Enter code: ")
-			var code string
-			fmt.Scanln(&code)
-			authorizer.Code <- code
-		} else if currentState.AuthorizationStateType() == client.TypeAuthorizationStateWaitPassword {
-			fmt.Print("Enter Password: ")
-			var password string
-			fmt.Scanln(&password)
-			authorizer.Password <- password
-		} else if currentState.AuthorizationStateType() == client.TypeAuthorizationStateReady {
-			fmt.Println("Authorization Ready! Let's rock")
-			break
-		}
-	}
+
 	return &AppClient{
 		Cli:  tdlibClient,
 		Conf: conf,
