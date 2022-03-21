@@ -12,7 +12,7 @@ RUN cd / \
     && cmake --build . -- -j5 \
     && make install
 
-FROM alpine:3.13
+FROM alpine:3.15
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 COPY --from=builder /usr/local/include/td /usr/local/include/td
 COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
