@@ -4,6 +4,7 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/r
 
 RUN apk update \
     && apk add --no-cache \
+    musl-dev \
     alpine-sdk \
     linux-headers \
     zlib-dev zlib-static libressl-dev openssl-dev \

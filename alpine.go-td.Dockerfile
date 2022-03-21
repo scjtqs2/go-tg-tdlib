@@ -2,10 +2,10 @@
 FROM scjtqs/tdlib:alpine-base AS gobuilder
 
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1.7.10"
+ARG RELEASE_VERSION="1.8.0"
 
-COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:1.7.10-alpine /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=scjtqs/tdlib:1.8.0-alpine /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:1.8.0-alpine /usr/local/lib/libtd* /usr/local/lib/
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
@@ -16,14 +16,14 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
-    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltddb -ltdsqlite -ltdnet -ltdutils -ldl -lm -lssl -lcrypto -lstdc++ -lz' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltdapi -ltddb -ltdsqlite -ltdnet -ltdutils -lstdc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 
 FROM alpine:3.15
 
 COPY --from=gobuilder /go-tg  /go-tg
-#RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
 RUN apk update && apk add --no-cache tzdata  \

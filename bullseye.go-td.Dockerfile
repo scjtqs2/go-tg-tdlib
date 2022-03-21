@@ -20,10 +20,10 @@
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1.7.10"
+ARG RELEASE_VERSION="1.8.0"
 
-COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=scjtqs/tdlib:1.8.0-bullseye /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:1.8.0-bullseye /usr/local/lib/libtd* /usr/local/lib/
 RUN mkdir /go-tdlib
 
 COPY . /go-tdlib/src/
@@ -34,7 +34,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
     && apt-get install linux-libc-dev \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
-    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdapi -ltdactor -ltddb -ltdsqlite -ltdnet -ltdutils -lc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+    && CGO_ENABLED=1 go build -ldflags="'-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltdapi -ltddb -ltdsqlite -ltdnet -ltdutils -lstdc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 
 FROM debian:bullseye-slim

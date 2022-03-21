@@ -20,7 +20,7 @@ func Start(conf *config.JsonConfig) {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-ch
-		client.Cli.DestroyInstance()
+		client.Cli.Destroy()
 		client.Cron.Stop()
 		os.Exit(1)
 	}()

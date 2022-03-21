@@ -2,7 +2,8 @@
 FROM scjtqs/tdlib:alpine-base AS builder
 
 RUN cd / \
-   && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
+#   && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
+   && git clone  https://ghproxy.com/https://github.com/tdlib/td.git --branch v1.8.0 --depth 1 \
     && cd td \
     && mkdir build \
     && cd build \

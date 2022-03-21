@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/Arman92/go-tdlib/v2/client"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/scjtqs/go-tg/app"
 	"github.com/scjtqs/go-tg/config"
@@ -54,8 +53,7 @@ func main() {
 	if d {
 		Daemon()
 	}
-	client.SetLogVerbosityLevel(1)
-	client.SetFilePath("./errors.txt")
+
 	var conf *config.JsonConfig
 	switch os.Getenv("IS_DOCKER") {
 	case "true":

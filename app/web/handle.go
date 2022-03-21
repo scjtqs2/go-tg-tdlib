@@ -4,13 +4,12 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"github.com/Arman92/go-tdlib/v2/client"
-	"github.com/Arman92/go-tdlib/v2/tdlib"
 	"github.com/gin-gonic/gin"
 	"github.com/scjtqs/go-tg/app/entity"
 	"github.com/scjtqs/go-tg/utils"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+	"github.com/zelenin/go-tdlib/client"
 	"io/ioutil"
 	"path"
 	"strconv"
@@ -18,7 +17,7 @@ import (
 )
 
 var haveFullChatList bool
-var allChats []*tdlib.Chat
+var allChats []*client.Chat
 
 // SendMessage 发送信息
 func (s *httpServer) SendMessage(c *gin.Context) {
@@ -54,7 +53,12 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 			c.JSON(200, entity.Failed(404, err.Error()))
 			return
 		}
-		msg, err := s.bot.SendMessage(chatID, messTraptId, replay_id, nil, nil, inputMsg)
+		msg, err := s.bot.SendMessage(&client.SendMessageRequest{
+			ChatId:              chatID,
+			MessageThreadId:     messTraptId,
+			ReplyToMessageId:    replay_id,
+			InputMessageContent: inputMsg,
+		})
 		if err != nil {
 			log.Error(err)
 			//消息发送失败
@@ -73,7 +77,9 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 	chatID := getParam(c, "chat_id")
 	if chatID != "" {
 		chatid, _ := strconv.ParseInt(chatID, 10, 64)
-		chat, err := s.bot.GetChat(chatid)
+		chat, err := s.bot.GetChat(&client.GetChatRequest{
+			ChatId: chatid,
+		})
 		if err != nil {
 			c.JSON(400, entity.Failed(400, err.Error()))
 			return
@@ -88,7 +94,9 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid name"))
 		return
 	}
-	chat, err := s.bot.SearchPublicChat(name)
+	chat, err := s.bot.SearchPublicChat(&client.SearchPublicChatRequest{
+		Username: chatID,
+	})
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
@@ -111,12 +119,19 @@ func (s *httpServer) GetUserInfo(c *gin.Context) {
 }
 
 // makeMsg 消息体构造
-func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) {
-	var inputMsg tdlib.InputMessageContent
+func (s *httpServer) makeMsg(message string) (client.InputMessageContent, error) {
+	var inputMsg client.InputMessageContent
 	msg := gjson.Parse(message)
 	switch msg.Get("msgtype").String() {
 	case entity.TEXT:
-		inputMsg = tdlib.NewInputMessageText(tdlib.NewFormattedText(msg.Get("content").String(), nil), true, true)
+		inputMsg = &client.InputMessageText{
+			Text: &client.FormattedText{
+				Text: msg.Get("content").String(),
+			},
+			DisableWebPagePreview: true,
+			ClearDraft:            true,
+		}
+
 	case entity.PHOTO:
 		f := msg.Get("file").String()
 		var filePath string
@@ -146,8 +161,17 @@ func (s *httpServer) makeMsg(message string) (tdlib.InputMessageContent, error) 
 			addedStickerFileIds = []int32{int32(stickerFileId)}
 		}
 		log.Debugf("send photo  file=%s,path=%s", f, filePath)
-		inputMsg = tdlib.NewInputMessagePhoto(tdlib.NewInputFileLocal(filePath), nil, addedStickerFileIds, 400, 400,
-			tdlib.NewFormattedText(msg.Get("content").String(), nil), 0)
+		inputMsg = &client.InputMessagePhoto{
+			Photo: &client.InputFileLocal{
+				Path: filePath,
+			},
+			AddedStickerFileIds: addedStickerFileIds,
+			Width:               400,
+			Height:              400,
+			Caption: &client.FormattedText{
+				Text: msg.Get("content").String(),
+			},
+		}
 	default:
 		return nil, errors.New("not support msg")
 	}
@@ -163,7 +187,7 @@ func (s *httpServer) SearchChatInfos(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid query"))
 		return
 	}
-	chat, err := s.bot.SearchChatsOnServer(query, 50)
+	chat, err := s.bot.SearchChatsOnServer(&client.SearchChatsOnServerRequest{Query: query, Limit: 50})
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
@@ -187,7 +211,7 @@ func (s *httpServer) GetUserByUserId(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid userID"))
 		return
 	}
-	user, err := s.bot.GetUser(uid)
+	user, err := s.bot.GetUser(&client.GetUserRequest{UserId: uid})
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
@@ -223,7 +247,10 @@ func (s *httpServer) GetMessage(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid messageID"))
 		return
 	}
-	msg, err := s.bot.GetMessage(cid, mid)
+	msg, err := s.bot.GetMessage(&client.GetMessageRequest{
+		ChatId:    cid,
+		MessageId: mid,
+	})
 	if err != nil {
 		log.Error(err)
 		c.JSON(200, entity.Failed(400, err.Error()))
@@ -246,10 +273,13 @@ func (s *httpServer) getChatList(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid limit"))
 		return
 	}
-	var chatList = tdlib.NewChatListMain()
+	var chatList client.ChatList
 
 	// get chats (ids) from tdlib
-	chats, err := s.bot.GetChats(chatList, int32(lid))
+	chats, err := s.bot.GetChats(&client.GetChatsRequest{
+		ChatList: chatList,
+		Limit:    int32(lid),
+	})
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, err.Error()))
@@ -259,31 +289,33 @@ func (s *httpServer) getChatList(c *gin.Context) {
 }
 
 // see https://stackoverflow.com/questions/37782348/how-to-use-getchats-in-tdlib
-func getChatList(client *client.Client, limit int) error {
+func getChatList(cli *client.Client, limit int) error {
 
 	if !haveFullChatList && limit > len(allChats) {
-		var chatList = tdlib.NewChatListMain()
-
+		var chatList client.ChatList
 		// get chats (ids) from tdlib
-		chats, err := client.GetChats(chatList, int32(limit-len(allChats)))
+		chats, err := cli.GetChats(&client.GetChatsRequest{
+			ChatList: chatList,
+			Limit:    int32(limit - len(allChats)),
+		})
 		if err != nil {
 			return err
 		}
-		if len(chats.ChatIDs) == 0 {
+		if len(chats.ChatIds) == 0 {
 			haveFullChatList = true
 			return nil
 		}
 
-		for _, chatID := range chats.ChatIDs {
+		for _, chatID := range chats.ChatIds {
 			// get chat info from tdlib
-			chat, err := client.GetChat(chatID)
+			chat, err := cli.GetChat(&client.GetChatRequest{ChatId: chatID})
 			if err == nil {
 				allChats = append(allChats, chat)
 			} else {
 				return err
 			}
 		}
-		return getChatList(client, limit)
+		return getChatList(cli, limit)
 	}
 	return nil
 }
@@ -300,7 +332,7 @@ func (s *httpServer) GetMessagesByChatID(c *gin.Context) {
 		c.JSON(400, entity.Failed(400, "invalid chatID"))
 		return
 	}
-	messages, err := s.bot.GetMessages(cid, nil)
+	messages, err := s.bot.GetMessages(&client.GetMessagesRequest{ChatId: cid})
 	if err != nil {
 		log.Error(err)
 		c.JSON(400, entity.Failed(400, err.Error()))
