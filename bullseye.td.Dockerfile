@@ -16,14 +16,15 @@ RUN cd / \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
 #    && cmake --build . -- -j$(($(nproc) + 1)) \
-    && cmake --build . --target prepare_cross_compiling \
-    && cd .. \
-    && php SplitSource.php \
-    && cd build \
-    && cmake --build . --target install \
-    && cd .. \
-    && php SplitSource.php --undo
-
+#    && cmake --build . --target prepare_cross_compiling \
+#    && cd .. \
+#    && php SplitSource.php \
+#    && cd build \
+#    && cmake --build . --target install \
+#    && cd .. \
+#    && php SplitSource.php --undo
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
+    && cmake --build . --target install
 
 FROM debian:bullseye-slim
 #RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
