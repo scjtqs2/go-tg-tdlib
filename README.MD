@@ -73,7 +73,7 @@ scjtqs/go-tg:1.7.10
 
 ## docker后台运行
 ```shell
-docker run  -D --restart=always --name tg_bot \
+docker run  -d --restart=always --name tg_bot \
 -v /yourdir:/home \
 -e ProxyStatus="true" \
 -e ProxyType="Socks5" \

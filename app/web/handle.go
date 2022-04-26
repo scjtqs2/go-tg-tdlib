@@ -95,7 +95,7 @@ func (s *httpServer) GetChatInfo(c *gin.Context) {
 		return
 	}
 	chat, err := s.bot.SearchPublicChat(&client.SearchPublicChatRequest{
-		Username: chatID,
+		Username: name,
 	})
 	if err != nil {
 		log.Error(err)
