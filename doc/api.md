@@ -8,7 +8,7 @@
 + WebApiHost api的监听地址。这里留空即可监听 ipv4和ipv6
 + WebApiPort api监听端口。eg "9001"
 + WebApiToken api鉴权的token。就是下方url中的 access_token
-
++ 记得添加 `docker -p 9001:9001` 透传你监听的端口
 ## api接口
 
 ### 通过username 拉取用户id和chatid
