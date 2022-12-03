@@ -1,0 +1,36 @@
+## 需要准备的全局变量
+## 1.SSH_PRIVATE_KEY 对应账号gitlab的私钥
+stages: # List of stages for jobs, and their order of execution
+  - mergefromgithub
+
+variables:
+  GITHUB_REPO: "https://github.com/scjtqs2/go-tg-tdlib.git"       # 改成你实际项目的上游地址
+  MAIN_BRANCH: "master"                                                # 要同步的分支名
+  GITLAB_URL: "gitlab"                                                 # gitlab runner 内部连 gitlab的地址
+
+mergefromgithub: # This job runs in the build stage, which runs first.
+  stage: mergefromgithub
+  before_script:
+    - 'which ssh-agent || ( apt-get update -qy && apt-get install openssh-client -qqy )'
+    - eval $(ssh-agent -s)
+    - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh ke
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - 'which git || ( apt-get update -qy && apt-get install git -qqy )'
+    - git config --global user.email "${GITLAB_USER_EMAIL}"
+    - git config --global user.name "${GITLAB_USER_NAME}"
+    - echo "add upstream"
+    - git remote add upstream $GITHUB_REPO
+    - echo "remote -v"
+    - git remote -v
+    - echo "fetch upstream"
+    - git fetch upstream
+    - echo "check main branch"
+    - git checkout origin/${MAIN_BRANCH}
+    - echo "merge upstream"
+    - git merge upstream/${MAIN_BRANCH}
+    - echo "push"
+    - git remote rm origin && git remote add origin "git@${GITLAB_URL}:${CI_PROJECT_PATH}.git"
+    - git push origin HEAD:${MAIN_BRANCH}
