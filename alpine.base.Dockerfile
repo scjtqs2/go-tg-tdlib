@@ -3,6 +3,7 @@ FROM golang:1.21-alpine3.19 as builder
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 RUN apk update \
+    && apk upgrade \
     && apk add --no-cache \
     musl-dev \
     alpine-sdk \
