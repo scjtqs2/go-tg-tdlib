@@ -3,12 +3,11 @@ FROM golang:1.21-alpine3.19 as builder
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache \
+    && apk add  \
     musl-dev \
     alpine-sdk \
     linux-headers \
-    zlib-dev zlib-static libressl-dev openssl-dev \
+    zlib-dev zlib-static libressl-dev openssl-dev openssl1.1-compat \
     gperf \
     php php-ctype   \
     ca-certificates \
