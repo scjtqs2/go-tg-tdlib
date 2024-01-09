@@ -1,5 +1,5 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM golang:1.17-bullseye
+FROM golang:1.21-bullseye
 COPY ./sources.list /etc/apt/sources.list
 
 RUN apt-get update && \
