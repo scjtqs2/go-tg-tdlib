@@ -25,8 +25,7 @@ RUN cd / \
 #    && cmake --build . --target install \
 #    && cd .. \
 #    && php SplitSource.php --undo
-    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
-    && cmake --build . --target install
+    && cmake --build . --target install -- -j $(nproc)
 
 FROM debian:bullseye-slim
 #RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
