@@ -56,7 +56,7 @@ func (s *httpServer) SendMessage(c *gin.Context) {
 		msg, err := s.bot.SendMessage(&client.SendMessageRequest{
 			ChatId:              chatID,
 			MessageThreadId:     messTraptId,
-			ReplyToMessageId:    replay_id,
+			ReplyTo:             &client.InputMessageReplyToMessage{MessageId: replay_id},
 			InputMessageContent: inputMsg,
 		})
 		if err != nil {
@@ -128,8 +128,8 @@ func (s *httpServer) makeMsg(message string) (client.InputMessageContent, error)
 			Text: &client.FormattedText{
 				Text: msg.Get("content").String(),
 			},
-			DisableWebPagePreview: true,
-			ClearDraft:            true,
+			//DisableWebPagePreview: true,
+			ClearDraft: true,
 		}
 
 	case entity.PHOTO:

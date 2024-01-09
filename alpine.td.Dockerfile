@@ -3,8 +3,10 @@ FROM scjtqs/tdlib:alpine-base AS builder
 
 RUN cd / \
 #   && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
-   && git clone  https://ghproxy.com/https://github.com/tdlib/td.git --branch v1.8.0 --depth 1 \
+   && git clone  https://mirror.ghproxy.com/https://github.com/tdlib/td.git \
     && cd td \
+    # 指定commit
+    && git reset --hard 1a50ec474ce2c2c09017aa3ab9cc9e0c68f483fc \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \

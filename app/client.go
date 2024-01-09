@@ -59,7 +59,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 		}
 	}()
 	appid, _ := strconv.ParseInt(conf.AppID, 10, 32)
-	authorizer.TdlibParameters <- &client.TdlibParameters{
+	authorizer.TdlibParameters <- &client.SetTdlibParametersRequest{
 		UseTestDc:              false,
 		DatabaseDirectory:      conf.DatabaseDirectory,
 		FilesDirectory:         conf.FileDirectory,
@@ -182,9 +182,9 @@ func (a *AppClient) SendMessageByName(name string, message string) error {
 	}
 	chatID := chat.Id
 	inputMsgTxt := &client.InputMessageText{
-		Text:                  &client.FormattedText{Text: message},
-		DisableWebPagePreview: true,
-		ClearDraft:            true,
+		Text: &client.FormattedText{Text: message},
+		//DisableWebPagePreview: true,
+		ClearDraft: true,
 	}
 	_, err = a.Cli.SendMessage(&client.SendMessageRequest{
 		ChatId:              chatID,

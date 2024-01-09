@@ -20,10 +20,10 @@
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1.8.0"
+ARG RELEASE_VERSION="1a50ec474ce2c2c09017aa3ab9cc9e0c68f483fc"
 
-COPY --from=scjtqs/tdlib:1.8.0-bullseye /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:1.8.0-bullseye /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=scjtqs/tdlib:2023-12-17--bullseye /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:2023-12-17--bullseye /usr/local/lib/libtd* /usr/local/lib/
 RUN mkdir /go-tdlib
 
 COPY . /go-tdlib/src/
