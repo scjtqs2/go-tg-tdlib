@@ -6,7 +6,7 @@ RUN cd / \
    && git clone  https://mirror.ghproxy.com/https://github.com/tdlib/td.git \
     && cd td \
     # 指定commit
-    && git reset --hard 1a50ec474ce2c2c09017aa3ab9cc9e0c68f483fc \
+    && git reset --hard d7203eb719304866a7eb7033ef03d421459335b8 \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \

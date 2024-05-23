@@ -10,7 +10,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
 	github.com/tidwall/gjson v1.14.0
-	github.com/zelenin/go-tdlib v0.7.1
+	github.com/zelenin/go-tdlib v0.7.3-0.20240419145636-6725904a903e
 )
 
 require (

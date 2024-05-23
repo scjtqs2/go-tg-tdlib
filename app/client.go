@@ -60,21 +60,21 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 	}()
 	appid, _ := strconv.ParseInt(conf.AppID, 10, 32)
 	authorizer.TdlibParameters <- &client.SetTdlibParametersRequest{
-		UseTestDc:              false,
-		DatabaseDirectory:      conf.DatabaseDirectory,
-		FilesDirectory:         conf.FileDirectory,
-		UseFileDatabase:        conf.UseFileDatabase,
-		UseChatInfoDatabase:    conf.UseChatInfoDatabase,
-		UseMessageDatabase:     conf.UseMessageDatabase,
-		UseSecretChats:         false,
-		ApiId:                  int32(appid),
-		ApiHash:                conf.AppHash,
-		SystemLanguageCode:     "en",
-		DeviceModel:            "Docker_Server",
-		SystemVersion:          "1.8.0",
-		ApplicationVersion:     "1.8.0",
-		EnableStorageOptimizer: true,
-		IgnoreFileNames:        conf.IgnoreFileNames,
+		UseTestDc:           false,
+		DatabaseDirectory:   conf.DatabaseDirectory,
+		FilesDirectory:      conf.FileDirectory,
+		UseFileDatabase:     conf.UseFileDatabase,
+		UseChatInfoDatabase: conf.UseChatInfoDatabase,
+		UseMessageDatabase:  conf.UseMessageDatabase,
+		UseSecretChats:      false,
+		ApiId:               int32(appid),
+		ApiHash:             conf.AppHash,
+		SystemLanguageCode:  "en",
+		DeviceModel:         "Docker_Server",
+		SystemVersion:       "1.8.0",
+		ApplicationVersion:  "1.8.0",
+		// EnableStorageOptimizer: true,
+		// IgnoreFileNames:        conf.IgnoreFileNames,
 	}
 
 	// You can set user-name and password to empty of don't need it
@@ -183,7 +183,7 @@ func (a *AppClient) SendMessageByName(name string, message string) error {
 	chatID := chat.Id
 	inputMsgTxt := &client.InputMessageText{
 		Text: &client.FormattedText{Text: message},
-		//DisableWebPagePreview: true,
+		// DisableWebPagePreview: true,
 		ClearDraft: true,
 	}
 	_, err = a.Cli.SendMessage(&client.SendMessageRequest{

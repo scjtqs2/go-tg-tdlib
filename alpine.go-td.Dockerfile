@@ -4,8 +4,8 @@ FROM scjtqs/tdlib:alpine-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 ARG RELEASE_VERSION="1a50ec474ce2c2c09017aa3ab9cc9e0c68f483fc"
 
-COPY --from=scjtqs/tdlib:2023-12-17-alpine /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:2023-12-17-alpine /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=scjtqs/tdlib:2024-04-19-alpine /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:2024-04-19-alpine /usr/local/lib/libtd* /usr/local/lib/
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
@@ -28,7 +28,7 @@ COPY --from=gobuilder /go-tg  /go-tg
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata libssl1.1 libstdc++ \
+RUN apk update && apk add --no-cache tzdata ca-certificates libssl1.1 libstdc++ \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \
