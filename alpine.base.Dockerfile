@@ -4,7 +4,7 @@ RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/
 
 RUN apk update && \
     apk upgrade && \
-    apk add --update \
+    apk add \
     build-base \
     ccache \
     alpine-sdk \
