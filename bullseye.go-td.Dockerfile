@@ -20,7 +20,7 @@
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="1a50ec474ce2c2c09017aa3ab9cc9e0c68f483fc"
+ARG RELEASE_VERSION="d7203eb719304866a7eb7033ef03d421459335b8"
 
 COPY --from=scjtqs/tdlib:2024-04-19-bullseye /usr/local/include/td /usr/local/include/td
 COPY --from=scjtqs/tdlib:2024-04-19-bullseye /usr/local/lib/libtd* /usr/local/lib/
@@ -34,7 +34,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod tidy \
     && apt-get install linux-libc-dev \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
-    && CGO_ENABLED=1 go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+    && CGO_ENABLED=1 go build -a -trimpath -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
     && cp go-tg /go-tg
 
 FROM debian:bullseye-slim
