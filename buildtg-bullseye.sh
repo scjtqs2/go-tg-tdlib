@@ -2,7 +2,7 @@
 source ./VERSION
 docker buildx create --use --name mybuildergotg
 #docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-docker buildx build --tag scjtqs/go-tg:${BUILD_VERSION}-debian --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f bullseye.go-td.Dockerfile .
+docker buildx build --tag scjtqs/go-tg:${BUILD_VERSION}-debian --platform linux/amd64,linux/arm64,linux/arm/v7 --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --build-arg GOPROXY="https://goproxy.cn,direct" --push -f bullseye.go-td.Dockerfile .
 #docker buildx build --tag registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:1.7.10 --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 --push -f bullseye.go-td.Dockerfile .
 docker buildx rm mybuildergotg
 
