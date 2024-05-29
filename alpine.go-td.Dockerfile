@@ -1,11 +1,14 @@
 # golang编译环境
+ARG TD_GIT_COMMIT="d7203eb719304866a7eb7033ef03d421459335b8"
+ARG BUILD_VERSION=2024-04-19
+FROM scjtqs/tdlib:${BUILD_VERSION}-alpine AS TG
+
 FROM scjtqs/tdlib:alpine-base AS gobuilder
 
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG TD_GIT_COMMIT="d7203eb719304866a7eb7033ef03d421459335b8"
-ARG BUILD_VERSION=2024-04-19
-COPY --from=scjtqs/tdlib:${BUILD_VERSION}-alpine /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:${BUILD_VERSION}-alpine /usr/local/lib/libtd* /usr/local/lib/
+
+COPY --from=TG /usr/local/include/td /usr/local/include/td
+COPY --from=TG /usr/local/lib/libtd* /usr/local/lib/
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
