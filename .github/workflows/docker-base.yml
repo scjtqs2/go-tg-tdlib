@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: buildx-bullseye
-        run: ./build-bullseye-base.sh
+        run: docker buildx build --tag scjtqs/tdlib:bullseye-base --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7  --push -f bullseye.base.Dockerfile . || exit 2
   alpine:
     runs-on: ubuntu-latest
     steps:
@@ -51,4 +51,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: buildx-alpine
-        run: ./build-alpine-base.sh
+        run: docker buildx build --tag scjtqs/tdlib:alpine-base --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7  --push -f alpine.base.Dockerfile .  || exit 2
