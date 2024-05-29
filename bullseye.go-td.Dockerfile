@@ -28,7 +28,7 @@ COPY --from=TG /usr/local/lib/libtd* /usr/local/lib/
 RUN mkdir /go-tdlib
 
 COPY . /go-tdlib/src/
-ARG GOPROXY=https://goproxy.io,direct
+ARG GOPROXY=https://proxy.golang.org,direct
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go mod tidy \
