@@ -27,7 +27,7 @@ RUN rm -rf /usr/local/lib/libtdjson.so* \
 FROM alpine:3.18
 
 COPY --from=gobuilder /go-tg  /go-tg
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
 RUN apk update && apk add --no-cache tzdata ca-certificates libssl1.1 libstdc++ \

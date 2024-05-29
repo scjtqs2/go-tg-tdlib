@@ -22,7 +22,7 @@ RUN cd / \
     && php SplitSource.php --undo
 
 FROM alpine:3.18
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 COPY --from=builder /usr/local/include/td /usr/local/include/td
 COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
 #COPY --from=builder /usr/lib/libssl.a /usr/local/lib/libssl.a
