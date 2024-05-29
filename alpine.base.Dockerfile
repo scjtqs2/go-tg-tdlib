@@ -2,8 +2,9 @@
 FROM golang:1.22-alpine3.18 as builder
 RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
-RUN apk update \
-    && apk add --no-cache \
+RUN apk update && \
+    apk upgrade && \
+    apk add --update \
     build-base \
     ccache \
     alpine-sdk \
@@ -12,7 +13,7 @@ RUN apk update \
     gperf \
     php php-ctype   \
     ca-certificates \
-    git \
+    git curl \
     gcc g++ \
     readline-dev \
     make cmake \
