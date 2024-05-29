@@ -1,4 +1,4 @@
-name: Docker-tdlib
+name: Docker-tdlib-debian
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Docker-tdlib
+name: Docker-tdlib-alpine
 
 on:
   workflow_dispatch:
