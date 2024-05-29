@@ -67,7 +67,9 @@ jobs:
 #        run: docker push $IMAGE_NAME
 
       - name: buildx-bullseye
-        run: ./buildForTdlib-bullseye.sh
+        run: |
+          source ./VERSION
+          docker buildx build --tag scjtqs/tdlib:${BUILD_VERSION}-bullseye --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7  --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f bullseye.td.Dockerfile . || exit 2
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   alpine:
@@ -101,4 +103,6 @@ jobs:
         #        run: docker push $IMAGE_NAME
 
       - name: buildx-alpine
-        run: ./buildForTdlib-alpine.sh
+        run: |
+          source ./VERSION
+          docker buildx build --tag scjtqs/tdlib:${BUILD_VERSION}-alpine --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f alpine.td.Dockerfile . || exit 2

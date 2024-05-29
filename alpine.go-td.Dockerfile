@@ -2,10 +2,10 @@
 FROM scjtqs/tdlib:alpine-base AS gobuilder
 
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-ARG RELEASE_VERSION="d7203eb719304866a7eb7033ef03d421459335b8"
-
-COPY --from=scjtqs/tdlib:2024-04-19-alpine /usr/local/include/td /usr/local/include/td
-COPY --from=scjtqs/tdlib:2024-04-19-alpine /usr/local/lib/libtd* /usr/local/lib/
+ARG TD_GIT_COMMIT="d7203eb719304866a7eb7033ef03d421459335b8"
+ARG BUILD_VERSION=2024-04-19
+COPY --from=scjtqs/tdlib:${BUILD_VERSION}-alpine /usr/local/include/td /usr/local/include/td
+COPY --from=scjtqs/tdlib:${BUILD_VERSION}-alpine /usr/local/lib/libtd* /usr/local/lib/
 
 RUN mkdir /go-tdlib
 COPY . /go-tdlib/src/
@@ -18,7 +18,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
 #    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
 #    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltdapi -ltddb -ltdsqlite -ltdnet -ltdutils -lstdc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
-    && CGO_ENABLED=1 go build -a -trimpath -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+    && CGO_ENABLED=1 go build -a -trimpath -ldflags="-s -w -X ""main.Version=${TD_GIT_COMMIT}""" -o go-tg  -v \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 

@@ -1,12 +1,12 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
 FROM scjtqs/tdlib:alpine-base AS builder
-
+ARG TD_GIT_COMMIT=d7203eb719304866a7eb7033ef03d421459335b8
 RUN cd / \
 #   && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
    && git clone  https://mirror.ghproxy.com/https://github.com/tdlib/td.git \
     && cd td \
     # 指定commit
-    && git reset --hard d7203eb719304866a7eb7033ef03d421459335b8 \
+    && git reset --hard ${TD_GIT_COMMIT} \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \

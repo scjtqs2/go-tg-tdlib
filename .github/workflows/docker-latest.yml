@@ -74,6 +74,9 @@ jobs:
 
 #      - name: Push image
 #        run: docker push $IMAGE_NAME
-        
+
       - name: buildx-latest
-        run: ./buildtg-latest.sh
+        run: |
+          source ./VERSION
+          docker buildx build --tag scjtqs/go-tg:latest --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f alpine.go-td.Dockerfile . || exit 2
+          docker buildx build --tag registry.cn-hangzhou.aliyuncs.com/scjtqs/go-tg:latest --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f alpine.go-td.Dockerfile . || exit 2
