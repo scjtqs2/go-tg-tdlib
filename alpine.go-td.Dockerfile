@@ -24,7 +24,7 @@ RUN rm -rf /usr/local/lib/libtdjson.so* \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 
-FROM alpine:3.18
+FROM alpine:3.16
 
 COPY --from=gobuilder /go-tg  /go-tg
 RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
