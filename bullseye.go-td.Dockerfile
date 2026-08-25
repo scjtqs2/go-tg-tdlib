@@ -32,8 +32,6 @@ ARG GOPROXY=https://proxy.golang.org,direct
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
 RUN go mod tidy \
-    && apt-get install linux-libc-dev \
-#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
     && CGO_ENABLED=1 go build -a -trimpath -ldflags="-s -w -X ""main.Version=${TD_GIT_COMMIT}""" -o go-tg  -v \
     && cp go-tg /go-tg
 

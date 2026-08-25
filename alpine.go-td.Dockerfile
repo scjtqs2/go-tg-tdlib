@@ -24,13 +24,12 @@ RUN rm -rf /usr/local/lib/libtdjson.so* \
     && cp go-tg /go-tg
 #    && rm -rf /go-tdlib
 
-FROM alpine:3.16
+FROM alpine:3.20
 
 COPY --from=gobuilder /go-tg  /go-tg
-RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 设置时区为上海
-RUN apk update && apk add --no-cache tzdata ca-certificates libssl1.1 libstdc++ \
+RUN apk update && apk add --no-cache tzdata ca-certificates libssl3 libstdc++ \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata   \

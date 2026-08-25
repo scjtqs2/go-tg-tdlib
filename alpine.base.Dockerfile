@@ -1,22 +1,23 @@
 # 静态编译 tdlib 需要至少3.5GB RAM
-FROM golang:1.23-alpine as builder
-RUN  #sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+FROM golang:1.23-alpine3.20 as builder
 
 RUN apk update && \
     apk upgrade && \
-    apk add \
+    apk add --no-cache \
     build-base \
     ccache \
     alpine-sdk \
     linux-headers \
-    zlib-dev zlib-static openssl-dev \
+    zlib-dev zlib-static \
+    openssl-dev openssl-libs-static \
     gperf \
-    php php-ctype   \
+    php-cli php-ctype \
     ca-certificates \
     git curl \
     gcc g++ \
     readline-dev \
-    make cmake \
-    && rm -rf /var/cache/apk/*
+    pkgconf \
+    make cmake ninja
+
 
 
