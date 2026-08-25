@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/app/web"
@@ -20,7 +21,7 @@ func Start(conf *config.JsonConfig) {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-ch
-		client.Cli.Destroy()
+		_, _ = client.Cli.Close(context.Background())
 		client.Cron.Stop()
 		os.Exit(1)
 	}()

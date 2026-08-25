@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/scjtqs/go-tg/config"
@@ -17,49 +18,8 @@ type AppClient struct {
 
 // NewClient 初始化 bot方法
 func NewClient(conf *config.JsonConfig) *AppClient {
-	// client authorizer
-	authorizer := client.ClientAuthorizer()
-	// go client.CliInteractor(authorizer)
-	go func() {
-		for {
-			select {
-			case currentState, ok := <-authorizer.State:
-				if !ok {
-					// log.Errorf("get state not readdy")
-					return
-				}
-				switch currentState.AuthorizationStateType() {
-				case client.TypeAuthorizationStateWaitPhoneNumber:
-					fmt.Print("Enter phone number: ")
-					var phoneNumber string
-					fmt.Scanln(&phoneNumber)
-
-					authorizer.PhoneNumber <- phoneNumber
-
-				case client.TypeAuthorizationStateWaitCode:
-					var code string
-
-					fmt.Print("Enter code: ")
-					fmt.Scanln(&code)
-
-					authorizer.Code <- code
-
-				case client.TypeAuthorizationStateWaitPassword:
-					fmt.Print("Enter password: ")
-					var password string
-					fmt.Scanln(&password)
-
-					authorizer.Password <- password
-
-				case client.TypeAuthorizationStateReady:
-					log.Info("Authorization Ready! Let's rock")
-					return
-				}
-			}
-		}
-	}()
 	appid, _ := strconv.ParseInt(conf.AppID, 10, 32)
-	authorizer.TdlibParameters <- &client.SetTdlibParametersRequest{
+	tdlibParameters := &client.SetTdlibParametersRequest{
 		UseTestDc:           false,
 		DatabaseDirectory:   conf.DatabaseDirectory,
 		FilesDirectory:      conf.FileDirectory,
@@ -77,15 +37,49 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 		// IgnoreFileNames:        conf.IgnoreFileNames,
 	}
 
-	// You can set user-name and password to empty of don't need it
-	// Socks5
-	// client.AddProxy("pi.scjtqs.com", 1234, true, tdlib.NewProxyTypeSocks5("user-name", "password"))
-	// client.AddProxy("pi.scjtqs.com", 10808, true, tdlib.NewProxyTypeSocks5("", ""))
-	// HTTP - HTTPS proxy
-	// client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeHttp("user-name", "password", false))
-	// MtProto Proxy
-	// client.AddProxy("127.0.0.1", 1234, true, tdlib.NewProxyTypeMtproto("MTPROTO-SECRET"))
-	var proxy client.Option
+	// client authorizer
+	authorizer := client.ClientAuthorizer(tdlibParameters)
+	// go client.CliInteractor(authorizer)
+	go func() {
+		for {
+			select {
+			case currentState, ok := <-authorizer.State:
+				if !ok {
+					// log.Errorf("get state not readdy")
+					return
+				}
+				switch currentState.AuthorizationStateConstructor() {
+				case client.ConstructorAuthorizationStateWaitPhoneNumber:
+					fmt.Print("Enter phone number: ")
+					var phoneNumber string
+					fmt.Scanln(&phoneNumber)
+
+					authorizer.PhoneNumber <- phoneNumber
+
+				case client.ConstructorAuthorizationStateWaitCode:
+					var code string
+
+					fmt.Print("Enter code: ")
+					fmt.Scanln(&code)
+
+					authorizer.Code <- code
+
+				case client.ConstructorAuthorizationStateWaitPassword:
+					fmt.Print("Enter password: ")
+					var password string
+					fmt.Scanln(&password)
+
+					authorizer.Password <- password
+
+				case client.ConstructorAuthorizationStateReady:
+					log.Info("Authorization Ready! Let's rock")
+					return
+				}
+			}
+		}
+	}()
+
+	var options []client.Option
 	if conf.Proxy.ProxyStatus {
 		switch conf.Proxy.ProxyType {
 		case "Socks5":
@@ -93,7 +87,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 			if err != nil {
 				panic("error proxy port")
 			}
-			proxy = client.WithProxy(&client.AddProxyRequest{
+			options = append(options, client.WithProxy(&client.AddProxyRequest{
 				Server: conf.Proxy.ProxyAddr,
 				Port:   int32(port),
 				Enable: true,
@@ -101,13 +95,13 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 					Username: conf.Proxy.ProxyUser,
 					Password: conf.Proxy.ProxyPasswd,
 				},
-			})
+			}))
 		case "HTTP":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
 			if err != nil {
 				panic("error proxy port")
 			}
-			proxy = client.WithProxy(&client.AddProxyRequest{
+			options = append(options, client.WithProxy(&client.AddProxyRequest{
 				Server: conf.Proxy.ProxyAddr,
 				Port:   int32(port),
 				Enable: true,
@@ -115,13 +109,13 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 					Username: conf.Proxy.ProxyUser,
 					Password: conf.Proxy.ProxyPasswd,
 				},
-			})
+			}))
 		case "HTTPS":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
 			if err != nil {
 				panic("error proxy port")
 			}
-			proxy = client.WithProxy(&client.AddProxyRequest{
+			options = append(options, client.WithProxy(&client.AddProxyRequest{
 				Server: conf.Proxy.ProxyAddr,
 				Port:   int32(port),
 				Enable: true,
@@ -129,38 +123,30 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 					Username: conf.Proxy.ProxyUser,
 					Password: conf.Proxy.ProxyPasswd,
 				},
-			})
+			}))
 		case "MtProto":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
 			if err != nil {
 				panic("error proxy port")
 			}
-			proxy = client.WithProxy(&client.AddProxyRequest{
+			options = append(options, client.WithProxy(&client.AddProxyRequest{
 				Server: conf.Proxy.ProxyAddr,
 				Port:   int32(port),
 				Enable: true,
 				Type: &client.ProxyTypeMtproto{
 					Secret: conf.Proxy.ProxyPasswd,
 				},
-			})
+			}))
 		default:
 			log.Fatalf("proxyType error,only  'Socks5'、'HTTP'、'HTTPS'、'MtProto' supportd for proxyType ,proxyConf=%+v", conf.Proxy)
 		}
 	}
 
-	logVerbosity := client.WithLogVerbosity(&client.SetLogVerbosityLevelRequest{
+	_, _ = client.SetLogVerbosityLevel(&client.SetLogVerbosityLevelRequest{
 		NewVerbosityLevel: 0,
 	})
-	var (
-		tdlibClient *client.Client
-		err         error
-	)
-	switch proxy {
-	case nil:
-		tdlibClient, err = client.NewClient(authorizer, logVerbosity)
-	default:
-		tdlibClient, err = client.NewClient(authorizer, logVerbosity, proxy)
-	}
+
+	tdlibClient, err := client.NewClient(authorizer, options...)
 	if err != nil {
 		log.Fatalf("NewClient error: %s", err)
 	}
@@ -173,7 +159,7 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 
 // SendMessageByName 给cron的定时发送使用 仅支持文本消息
 func (a *AppClient) SendMessageByName(name string, message string) error {
-	chat, err := a.Cli.SearchPublicChat(&client.SearchPublicChatRequest{
+	chat, err := a.Cli.SearchPublicChat(context.Background(), &client.SearchPublicChatRequest{
 		Username: name,
 	})
 	if err != nil {
@@ -186,7 +172,7 @@ func (a *AppClient) SendMessageByName(name string, message string) error {
 		// DisableWebPagePreview: true,
 		ClearDraft: true,
 	}
-	_, err = a.Cli.SendMessage(&client.SendMessageRequest{
+	_, err = a.Cli.SendMessage(context.Background(), &client.SendMessageRequest{
 		ChatId:              chatID,
 		InputMessageContent: inputMsgTxt,
 	})

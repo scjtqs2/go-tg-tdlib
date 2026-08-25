@@ -8,7 +8,7 @@
 
 # 使用已安装好编译环境的镜像。节省时间
 FROM scjtqs/tdlib:bullseye-base AS builder
-ARG TD_GIT_COMMIT=d7203eb719304866a7eb7033ef03d421459335b8
+ARG TD_GIT_COMMIT=49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4
 # v1.7.10
 RUN cd / \
    && git clone  https://mirror.ghproxy.com/https://github.com/tdlib/td.git \

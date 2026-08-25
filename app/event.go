@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"github.com/scjtqs/go-tg/config"
 	log "github.com/sirupsen/logrus"
 	"github.com/zelenin/go-tdlib/client"
@@ -14,7 +15,7 @@ func (a *AppClient) FilterMsg(index int, conf *config.WebHook) {
 	var chatIds []string
 	if conf.WebHookFilter != nil && conf.WebHookFilter.FilterStatus {
 		for _, v := range conf.WebHookFilter.FilterNames {
-			id, err := a.Cli.SearchPublicChat(&client.SearchPublicChatRequest{Username: v})
+			id, err := a.Cli.SearchPublicChat(context.Background(), &client.SearchPublicChatRequest{Username: v})
 			if err != nil {
 				log.Errorf("search for chat faild name=%s,err=%v", v, err)
 				continue
@@ -22,34 +23,7 @@ func (a *AppClient) FilterMsg(index int, conf *config.WebHook) {
 			chatIds = append(chatIds, strconv.FormatInt(id.Id, 10))
 		}
 	}
-
-	go func() {
-		//// Create an filter function which will be used to filter out unwanted tdlib messages
-		//eventFilter := func(msg *client.Message) bool {
-		//	updateMsg := (*msg).(*client.UpdateNewMessage)
-		//	switch updateMsg.Message.Sender.GetMessageSenderEnum() {
-		//	case tdlib.MessageSenderUserType:
-		//		sender := updateMsg.Message.Sender.(*tdlib.MessageSenderUser)
-		//		//log.Debugf("senderUser=%+v", sender)
-		//		if utils.InArrayString(strconv.FormatInt(int64(sender.UserID), 10), chatIds) {
-		//			return true
-		//		}
-		//	case tdlib.MessageSenderChatType:
-		//		sender := updateMsg.Message.Sender.(*tdlib.MessageSenderChat)
-		//		//log.Debugf("senderChat=%+v", sender)
-		//		if utils.InArrayString(strconv.FormatInt(int64(sender.ChatID), 10), chatIds) {
-		//			return true
-		//		}
-		//	}
-		//	return !conf.WebHookFilter.FilterStatus
-		//}
-		listener := a.Cli.GetListener()
-		defer  listener.Close()
-		for update:=range listener.Updates {
-			if update.GetClass() == client.ClassUpdate {
-				log.Printf("%#v", update)
-			}
-		}
+}
 		//// Here we can add a receiver to retreive any message type we want
 		//// We like to get UpdateNewMessage events and with a specific FilterFunc
 		//receiver := a.Cli.AddEventReceiver(&tdlib.UpdateNewMessage{}, eventFilter, 5)

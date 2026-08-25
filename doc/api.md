@@ -284,7 +284,7 @@
 |---|---|---|---|
 | userID|是| string| 用户id|
 
-### 通过用户id查用户信息
+### 通过chat_id和message_id获取单条消息
 
 > GET http://ip:port/get_message?access_token=你的token&chat_id=10000000&message_id=11111
 
@@ -292,3 +292,12 @@
 |---|---|---|---|
 | chat_id|是| string| 聊天id|
 | message_id|是| string| 消息id|
+
+### 获取指定聊天的历史消息列表
+
+> GET http://ip:port/get_messages?access_token=你的token&chat_id=10000000
+
+| 字段 |是否必须 |字段类型 |说明|
+|---|---|---|---|
+| chat_id|是| string| 聊天id|
+

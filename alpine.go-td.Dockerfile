@@ -1,6 +1,6 @@
 # golang编译环境
-ARG TD_GIT_COMMIT="d7203eb719304866a7eb7033ef03d421459335b8"
-ARG BUILD_VERSION=2024-04-19
+ARG TD_GIT_COMMIT="49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4"
+ARG BUILD_VERSION=2026-05-08
 FROM scjtqs/tdlib:${BUILD_VERSION}-alpine AS TG
 
 FROM scjtqs/tdlib:alpine-base AS gobuilder

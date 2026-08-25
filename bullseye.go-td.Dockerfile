@@ -16,8 +16,8 @@
 #    apt-get install -y git cmake build-essential zlib1g-dev libssl-dev gperf php cmake clang libc++-dev libc++abi-dev \
 #    && rm -rf /var/lib/apt/lists/ \
 #    && mkdir /go-tdlib
-ARG TD_GIT_COMMIT="d7203eb719304866a7eb7033ef03d421459335b8"
-ARG BUILD_VERSION=2024-04-19
+ARG TD_GIT_COMMIT="49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4"
+ARG BUILD_VERSION=2026-05-08
 FROM scjtqs/tdlib:${BUILD_VERSION}-bullseye AS TG
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
