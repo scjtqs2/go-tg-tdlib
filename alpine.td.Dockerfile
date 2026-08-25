@@ -3,7 +3,7 @@ FROM scjtqs/tdlib:alpine-base AS builder
 ARG TD_GIT_COMMIT=49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4
 RUN cd / \
 #   && git clone https://ghproxy.com/https://github.com/scjtqs2/td -b 1.7.10 --depth 1 \
-   && git clone  https://mirror.ghproxy.com/https://github.com/tdlib/td.git \
+   && git clone  https://gh.mobyds.com/https://github.com/tdlib/td.git \
     && cd td \
     # 指定commit
     && git reset --hard ${TD_GIT_COMMIT} \
