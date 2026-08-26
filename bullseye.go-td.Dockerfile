@@ -18,13 +18,13 @@
 #    && mkdir /go-tdlib
 ARG TD_GIT_COMMIT="49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4"
 ARG BUILD_VERSION=2026-05-08
-FROM scjtqs/tdlib:${BUILD_VERSION}-bullseye AS TG
+FROM scjtqs/tdlib:${BUILD_VERSION}-bullseye AS tg
 # 使用已安装好编译环境的镜像，节省时间。
 FROM scjtqs/tdlib:bullseye-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 
-COPY --from=TG /usr/local/include/td /usr/local/include/td
-COPY --from=TG /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=tg /usr/local/include/td /usr/local/include/td
+COPY --from=tg /usr/local/lib/libtd* /usr/local/lib/
 RUN mkdir /go-tdlib
 
 COPY . /go-tdlib/src/
