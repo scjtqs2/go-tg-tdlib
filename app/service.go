@@ -40,7 +40,7 @@ func Start(conf *config.JsonConfig) {
 			log.Infof("crontab to username %s start", name)
 			e := client.SendMessageByName(name, text)
 			if e != nil {
-				log.Errorf("send message to username error err:%v \n\n", name, e)
+				log.Errorf("send message to username %s error err:%v \n\n", name, e)
 			}
 		})
 		if err != nil {
