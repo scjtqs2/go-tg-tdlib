@@ -88,13 +88,15 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 				panic("error proxy port")
 			}
 			options = append(options, client.WithProxy(&client.AddProxyRequest{
-				Server: conf.Proxy.ProxyAddr,
-				Port:   int32(port),
-				Enable: true,
-				Type: &client.ProxyTypeSocks5{
-					Username: conf.Proxy.ProxyUser,
-					Password: conf.Proxy.ProxyPasswd,
+				Proxy: &client.Proxy{
+					Server: conf.Proxy.ProxyAddr,
+					Port:   int32(port),
+					Type: &client.ProxyTypeSocks5{
+						Username: conf.Proxy.ProxyUser,
+						Password: conf.Proxy.ProxyPasswd,
+					},
 				},
+				Enable: true,
 			}))
 		case "HTTP":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
@@ -102,13 +104,15 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 				panic("error proxy port")
 			}
 			options = append(options, client.WithProxy(&client.AddProxyRequest{
-				Server: conf.Proxy.ProxyAddr,
-				Port:   int32(port),
-				Enable: true,
-				Type: &client.ProxyTypeHttp{
-					Username: conf.Proxy.ProxyUser,
-					Password: conf.Proxy.ProxyPasswd,
+				Proxy: &client.Proxy{
+					Server: conf.Proxy.ProxyAddr,
+					Port:   int32(port),
+					Type: &client.ProxyTypeHttp{
+						Username: conf.Proxy.ProxyUser,
+						Password: conf.Proxy.ProxyPasswd,
+					},
 				},
+				Enable: true,
 			}))
 		case "HTTPS":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
@@ -116,13 +120,15 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 				panic("error proxy port")
 			}
 			options = append(options, client.WithProxy(&client.AddProxyRequest{
-				Server: conf.Proxy.ProxyAddr,
-				Port:   int32(port),
-				Enable: true,
-				Type: &client.ProxyTypeHttp{
-					Username: conf.Proxy.ProxyUser,
-					Password: conf.Proxy.ProxyPasswd,
+				Proxy: &client.Proxy{
+					Server: conf.Proxy.ProxyAddr,
+					Port:   int32(port),
+					Type: &client.ProxyTypeHttp{
+						Username: conf.Proxy.ProxyUser,
+						Password: conf.Proxy.ProxyPasswd,
+					},
 				},
+				Enable: true,
 			}))
 		case "MtProto":
 			port, err := strconv.ParseInt(conf.Proxy.ProxyPort, 10, 32)
@@ -130,12 +136,14 @@ func NewClient(conf *config.JsonConfig) *AppClient {
 				panic("error proxy port")
 			}
 			options = append(options, client.WithProxy(&client.AddProxyRequest{
-				Server: conf.Proxy.ProxyAddr,
-				Port:   int32(port),
-				Enable: true,
-				Type: &client.ProxyTypeMtproto{
-					Secret: conf.Proxy.ProxyPasswd,
+				Proxy: &client.Proxy{
+					Server: conf.Proxy.ProxyAddr,
+					Port:   int32(port),
+					Type: &client.ProxyTypeMtproto{
+						Secret: conf.Proxy.ProxyPasswd,
+					},
 				},
+				Enable: true,
 			}))
 		default:
 			log.Fatalf("proxyType error,only  'Socks5'、'HTTP'、'HTTPS'、'MtProto' supportd for proxyType ,proxyConf=%+v", conf.Proxy)
