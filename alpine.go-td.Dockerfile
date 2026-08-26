@@ -15,17 +15,13 @@ COPY . /go-tdlib/src/
 ARG GOPROXY=https://proxy.golang.org,direct
 WORKDIR /go-tdlib/src
 ## cgo的静态编译，-a代表重新编译,这样配置支持跨平台交叉编译
-RUN rm -rf /usr/local/lib/libtdjson.so* \
-    && go mod tidy \
-#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w" -installsuffix cgo -o go-tg -a -v \
-#    && CGO_ENABLED=1 CGO_LDFLAGS="-static" go build -ldflags="-s -w -X ""main.Version=${RELEASE_VERSION}""" -installsuffix cgo -o go-tg  -v \
-#    && CGO_ENABLED=1 go build -ldflags="-extldflags '-static -L/usr/local/lib -ltdjson_static -ltdjson_private -ltdclient -ltdcore -ltdactor -ltdapi -ltddb -ltdsqlite -ltdnet -ltdutils -lstdc++ -lssl -lcrypto -ldl -lz -lm' -s -w -X ""main.Version=${RELEASE_VERSION}""" -o go-tg  -v \
+RUN go mod tidy \
     && CGO_ENABLED=1 go build -a -trimpath -ldflags="-s -w -X ""main.Version=${TD_GIT_COMMIT}""" -o go-tg  -v \
     && cp go-tg /go-tg
-#    && rm -rf /go-tdlib
 
 FROM alpine:3.20
 
+COPY --from=tg /usr/local/lib/libtdjson.so* /usr/local/lib/
 COPY --from=gobuilder /go-tg  /go-tg
 
 # 设置时区为上海

@@ -38,6 +38,7 @@ RUN go mod tidy \
 FROM debian:bullseye-slim
 
 COPY ./sources.list /etc/apt/sources.list
+COPY --from=tg /usr/local/lib/libtdjson.so* /usr/local/lib/
 COPY --from=gobuilder /go-tg  /go-tg
 
 RUN apt-get update && apt-get install -y locales tzdata libssl1.1 libstdc++6 ca-certificates && rm -rf /var/lib/apt/lists/* \
