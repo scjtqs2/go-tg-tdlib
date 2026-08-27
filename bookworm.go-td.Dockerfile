@@ -1,26 +1,8 @@
-## golang编译环境
-#FROM golang:1.17-bullseye as gobuilder
-#COPY ./sources.list /etc/apt/sources.list
-#
-#ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
-#ARG RELEASE_VERSION="1.0.0"
-#
-#COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/include/td /usr/local/include/td
-#COPY --from=scjtqs/tdlib:1.7.10-bullseye /usr/local/lib/libtd* /usr/local/lib/
-##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libssl.a /usr/local/lib/libssl.a
-##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libcrypto.a /usr/local/lib/libcrypto.a
-##COPY --from=scjtqs/tdlib:1.7.10-buster /usr/local/lib/libz.a /usr/local/lib/libz.a
-#
-#RUN apt-get update && \
-#    apt-get upgrade -y && \
-#    apt-get install -y git cmake build-essential zlib1g-dev libssl-dev gperf php cmake clang libc++-dev libc++abi-dev \
-#    && rm -rf /var/lib/apt/lists/ \
-#    && mkdir /go-tdlib
 ARG TD_GIT_COMMIT="49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4"
 ARG BUILD_VERSION=2026-05-08
-FROM scjtqs/tdlib:${BUILD_VERSION}-bullseye AS tg
+FROM scjtqs/tdlib:${BUILD_VERSION}-bookworm AS tg
 # 使用已安装好编译环境的镜像，节省时间。
-FROM scjtqs/tdlib:bullseye-base AS gobuilder
+FROM scjtqs/tdlib:bookworm-base AS gobuilder
 ENV GOPATH="/go-tdlib:/usr/local/lib/:/usr/local/include/td"
 
 COPY --from=tg /usr/local/include/td /usr/local/include/td
@@ -35,13 +17,13 @@ RUN go mod tidy \
     && CGO_ENABLED=1 go build -tags libtdjson -a -trimpath -ldflags="-s -w -X ""main.Version=${TD_GIT_COMMIT}""" -o go-tg  -v \
     && cp go-tg /go-tg
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 COPY ./sources.list /etc/apt/sources.list
 COPY --from=tg /usr/local/lib/libtdjson.so* /usr/local/lib/
 COPY --from=gobuilder /go-tg  /go-tg
 
-RUN apt-get update && apt-get install -y locales tzdata libssl1.1 libstdc++6 ca-certificates && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y locales tzdata libssl3 libstdc++6 ca-certificates && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 ENV TZ=Asia/Shanghai \
@@ -93,5 +75,3 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 CMD ["/run.sh"]
-
-

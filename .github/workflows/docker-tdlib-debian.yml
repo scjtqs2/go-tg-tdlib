@@ -13,7 +13,7 @@ on:
 
 
 jobs:
-  bullseye:
+  bookworm:
 
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +31,7 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: buildx-bullseye
+      - name: buildx-bookworm
         run: |
           source ./VERSION
-          docker buildx build --tag scjtqs/tdlib:${BUILD_VERSION}-bullseye --platform linux/amd64,linux/arm64,linux/arm/v7  --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f bullseye.td.Dockerfile . || exit 2
+          docker buildx build --tag scjtqs/tdlib:${BUILD_VERSION}-bookworm --platform linux/amd64,linux/arm64,linux/arm/v7  --build-arg BUILD_VERSION="${BUILD_VERSION}" --build-arg TD_GIT_COMMIT="${TD_GIT_COMMIT}" --push -f bookworm.td.Dockerfile . || exit 2

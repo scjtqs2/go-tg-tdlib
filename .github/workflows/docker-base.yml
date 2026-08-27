@@ -15,7 +15,7 @@ env:
   IMAGE_NAME: scjtqs/go-tg:test
 
 jobs:
-  bullseye:
+  bookworm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,8 +32,8 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: buildx-bullseye
-        run: docker buildx build --tag scjtqs/tdlib:bullseye-base --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7  --push -f bullseye.base.Dockerfile . || exit 2
+      - name: buildx-bookworm
+        run: docker buildx build --tag scjtqs/tdlib:bookworm-base --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7  --push -f bookworm.base.Dockerfile . || exit 2
   alpine:
     runs-on: ubuntu-latest
     steps:

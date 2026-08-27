@@ -1,15 +1,6 @@
-## 静态编译 tdlib 需要至少3.5GB RAM
-#FROM debian:bullseye-slim as builder
-#COPY ./sources.list /etc/apt/sources.list
-#
-#RUN apt-get update && \
-##    apt-get upgrade -y && \
-#    apt-get install -fy git cmake build-essential gperf libssl-dev zlib1g-dev  libc++-dev libc++abi-dev
-
-# 使用已安装好编译环境的镜像。节省时间
-FROM scjtqs/tdlib:bullseye-base AS builder
+# 静态编译 tdlib 需要至少3.5GB RAM
+FROM scjtqs/tdlib:bookworm-base AS builder
 ARG TD_GIT_COMMIT=49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4
-# v1.7.10
 RUN cd / \
    && git clone  https://gh.mobyds.com/https://github.com/tdlib/td.git \
     && cd td \
@@ -26,11 +17,6 @@ RUN cd / \
     && cd .. \
     && php SplitSource.php --undo
 
-FROM debian:bullseye-slim
-#RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+FROM debian:bookworm-slim
 COPY --from=builder /usr/local/include/td /usr/local/include/td
 COPY --from=builder /usr/local/lib/libtd* /usr/local/lib/
-#COPY --from=builder /usr/lib/libssl.a /usr/local/lib/libssl.a
-#COPY --from=builder /usr/lib/libcrypto.a /usr/local/lib/libcrypto.a
-#COPY --from=builder /lib/libz.a /usr/local/lib/libz.a
-
