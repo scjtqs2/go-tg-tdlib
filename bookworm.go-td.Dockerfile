@@ -19,7 +19,8 @@ RUN go mod tidy \
 
 FROM debian:bookworm-slim
 
-COPY ./sources.list /etc/apt/sources.list
+# 如需国内构建加速可手动启用清华源：
+# COPY ./sources.list /etc/apt/sources.list
 COPY --from=tg /usr/local/lib/libtdjson.so* /usr/local/lib/
 COPY --from=gobuilder /go-tg  /go-tg
 
